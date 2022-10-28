@@ -1,13 +1,25 @@
 import { useState } from "react";
-import { ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import {
+  Button,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 
 import { Colors } from "../../constants/colors";
+import OutlinedButton from "../UI/OutlinedButton";
 
 function PlaceForm() {
   const [enteredTitle, setEnteredTitle] = useState("");
 
   function changeTitleHandler(enteredText) {
     setEnteredTitle(enteredText);
+  }
+
+  function addPlaceHandler() {
+    console.log("Place added");
   }
 
   return (
@@ -20,6 +32,7 @@ function PlaceForm() {
           value={enteredTitle}
         />
       </View>
+      <OutlinedButton onPress={addPlaceHandler}>Add Place</OutlinedButton>
     </ScrollView>
   );
 }
