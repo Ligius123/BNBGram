@@ -8,7 +8,7 @@ import {
   View,
 } from "react-native";
 
-import { Colors } from "../../constants/colors";
+import { Colors } from "../../constants/styles";
 import OutlinedButton from "../UI/OutlinedButton";
 
 function PlaceForm() {
