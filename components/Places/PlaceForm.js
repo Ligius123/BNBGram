@@ -18,8 +18,8 @@ function PlaceForm() {
     setEnteredTitle(enteredText);
   }
 
-  function addPlaceHandler() {
-    console.log("Place added");
+  function addPlaceHandler(enteredTitle) {
+    console.log(enteredTitle);
   }
 
   return (
