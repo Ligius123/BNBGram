@@ -21,7 +21,7 @@ function AuthStack() {
       }}
     >
       <Stack.Screen name="Login" component={Login} />
-      <Stack.Screen name="Signup" component={SignUp} />
+      <Stack.Screen name="SignUp" component={SignUp} />
     </Stack.Navigator>
   );
 }
