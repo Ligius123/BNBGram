@@ -1,15 +1,8 @@
 import { useState } from "react";
-import {
-  Button,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
+import { ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 
 import { Colors } from "../../constants/styles";
-import OutlinedButton from "../UI/OutlinedButton";
+import OutlinedButton from "../ui/OutlinedButton";
 
 function PlaceForm() {
   const [enteredTitle, setEnteredTitle] = useState("");

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 
-import OutlinedButton from "../UI/OutlinedButton";
+import Button from "../ui/Button";
 import Input from "./Input";
 
 function AuthForm({ isLogin, onSubmit, credentialsInvalid }) {
@@ -82,9 +82,9 @@ function AuthForm({ isLogin, onSubmit, credentialsInvalid }) {
           />
         )}
         <View style={styles.buttons}>
-          <OutlinedButton onPress={submitHandler}>
+          <Button onPress={submitHandler}>
             {isLogin ? "Log In" : "Sign Up"}
-          </OutlinedButton>
+          </Button>
         </View>
       </View>
     </View>
