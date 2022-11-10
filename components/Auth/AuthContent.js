@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Alert, StyleSheet, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
-import OutlinedButton from "../UI/OutlinedButton";
+import FlatButton from "../ui/FlatButton";
 import AuthForm from "./AuthForm";
 import { Colors } from "../../constants/styles";
 
@@ -18,9 +18,9 @@ function AuthContent({ isLogin, onAuthenticate }) {
 
   function switchAuthModeHandler() {
     if (isLogin) {
-      navigation.navigate("SignUp");
+      navigation.replace("Signup");
     } else {
-      navigation.navigate("Login");
+      navigation.replace("Login");
     }
   }
 
@@ -60,9 +60,9 @@ function AuthContent({ isLogin, onAuthenticate }) {
         credentialsInvalid={credentialsInvalid}
       />
       <View style={styles.buttons}>
-        <OutlinedButton onPress={switchAuthModeHandler}>
+        <FlatButton onPress={switchAuthModeHandler}>
           {isLogin ? "Create a new user" : "Log in instead"}
-        </OutlinedButton>
+        </FlatButton>
       </View>
     </View>
   );

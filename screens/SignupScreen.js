@@ -2,11 +2,11 @@ import { useContext, useState } from "react";
 import { Alert } from "react-native";
 
 import AuthContent from "../components/Auth/AuthContent";
-import LoadingOverlay from "../components/UI/LoadingOverlay";
+import LoadingOverlay from "../components/ui/LoadingOverlay";
 import { AuthContext } from "../store/auth-context";
 import { createUser } from "../util/auth";
 
-function Signup() {
+function SignupScreen() {
   const [isAuthenticating, setIsAuthenticating] = useState(false);
 
   const authCtx = useContext(AuthContext);
@@ -32,4 +32,4 @@ function Signup() {
   return <AuthContent onAuthenticate={signupHandler} />;
 }
 
-export default Signup;
+export default SignupScreen;
