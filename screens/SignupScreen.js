@@ -5,6 +5,7 @@ import AuthContent from "../components/Auth/AuthContent";
 import LoadingOverlay from "../components/ui/LoadingOverlay";
 import { AuthContext } from "../store/auth-context";
 import { createUser } from "../util/auth";
+import { ImageBackground, StyleSheet } from "react-native";
 
 function SignupScreen() {
   const [isAuthenticating, setIsAuthenticating] = useState(false);
@@ -26,10 +27,37 @@ function SignupScreen() {
   }
 
   if (isAuthenticating) {
-    return <LoadingOverlay message="Creating user..." />;
+    return (
+      <ImageBackground
+        source={require("../assets/images/roma.png")}
+        resizeMode="cover"
+        style={styles.rootScreen}
+        imageStyle={styles.backgroundImage}
+      >
+        <LoadingOverlay message="Creating user..." />
+      </ImageBackground>
+    );
   }
 
-  return <AuthContent onAuthenticate={signupHandler} />;
+  return (
+    <ImageBackground
+      source={require("../assets/images/roma.png")}
+      resizeMode="cover"
+      style={styles.rootScreen}
+      imageStyle={styles.backgroundImage}
+    >
+      <AuthContent onAuthenticate={signupHandler} />
+    </ImageBackground>
+  );
 }
 
 export default SignupScreen;
+
+const styles = StyleSheet.create({
+  rootScreen: {
+    flex: 1,
+  },
+  backgroundImage: {
+    opacity: 0.15,
+  },
+});
