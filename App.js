@@ -2,7 +2,6 @@ import { useContext } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, ImageBackground } from "react-native";
 
 import LoginScreen from "./screens/LoginScreen";
 import SignupScreen from "./screens/SignupScreen";
@@ -94,9 +93,3 @@ export default function App() {
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  backgroundImage: {
-    opacity: 0.15,
-  },
-});
