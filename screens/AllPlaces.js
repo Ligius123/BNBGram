@@ -1,26 +1,12 @@
 import PlacesList from "../components/Places/PlacesList";
-import { ImageBackground, StyleSheet } from "react-native";
+import BackgroundImage from "../components/ui/BackgroundImage";
 
 function AllPlaces() {
   return (
-    <ImageBackground
-      source={require("../assets/images/roma.png")}
-      resizeMode="cover"
-      style={styles.rootScreen}
-      imageStyle={styles.backgroundImage}
-    >
+    <BackgroundImage>
       <PlacesList />
-    </ImageBackground>
+    </BackgroundImage>
   );
 }
 
 export default AllPlaces;
-
-const styles = StyleSheet.create({
-  rootScreen: {
-    flex: 1,
-  },
-  backgroundImage: {
-    opacity: 0.15,
-  },
-});
