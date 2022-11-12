@@ -6,6 +6,7 @@ import LoadingOverlay from "../components/ui/LoadingOverlay";
 import { AuthContext } from "../store/auth-context";
 import { login } from "../util/auth";
 import { ImageBackground, StyleSheet } from "react-native";
+import BackgroundImage from "../components/ui/BackgroundImage";
 
 function LoginScreen() {
   const [isAuthenticating, setIsAuthenticating] = useState(false);
@@ -28,26 +29,16 @@ function LoginScreen() {
 
   if (isAuthenticating) {
     return (
-      <ImageBackground
-        source={require("../assets/images/roma.png")}
-        resizeMode="cover"
-        style={styles.rootScreen}
-        imageStyle={styles.backgroundImage}
-      >
+      <BackgroundImage>
         <LoadingOverlay message="Logging you in..." />
-      </ImageBackground>
+      </BackgroundImage>
     );
   }
 
   return (
-    <ImageBackground
-      source={require("../assets/images/roma.png")}
-      resizeMode="cover"
-      style={styles.rootScreen}
-      imageStyle={styles.backgroundImage}
-    >
+    <BackgroundImage>
       <AuthContent isLogin onAuthenticate={loginHandler} />
-    </ImageBackground>
+    </BackgroundImage>
   );
 }
 
