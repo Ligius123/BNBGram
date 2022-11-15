@@ -5,7 +5,7 @@ import AuthContent from "../components/Auth/AuthContent";
 import LoadingOverlay from "../components/ui/LoadingOverlay";
 import { AuthContext } from "../store/auth-context";
 import { login } from "../util/auth";
-import { ImageBackground, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import BackgroundImage from "../components/ui/BackgroundImage";
 
 function LoginScreen() {
@@ -43,12 +43,3 @@ function LoginScreen() {
 }
 
 export default LoginScreen;
-
-const styles = StyleSheet.create({
-  rootScreen: {
-    flex: 1,
-  },
-  backgroundImage: {
-    opacity: 0.7,
-  },
-});

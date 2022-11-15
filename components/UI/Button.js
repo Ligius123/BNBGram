@@ -23,11 +23,11 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     paddingHorizontal: 12,
     backgroundColor: Colors.primary500,
-    elevation: 2,
-    shadowColor: "black",
-    shadowOffset: { width: 1, height: 1 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
+    // elevation: 2,
+    // shadowColor: "black",
+    // shadowOffset: { width: 1, height: 1 },
+    // shadowOpacity: 0.75,
+    // shadowRadius: 4,
   },
   pressed: {
     opacity: 0.7,
@@ -37,5 +37,6 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 16,
     fontWeight: "bold",
+    opcaity: 1,
   },
 });
