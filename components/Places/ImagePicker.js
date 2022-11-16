@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { Button, Image, View } from "react-native";
+import { Image, View } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { StyleSheet } from "react-native";
 
+import OutlinedButton from "../ui/OutlinedButton";
 export default function ImagePickerComp() {
   const [image, setImage] = useState(null);
 
@@ -24,7 +25,9 @@ export default function ImagePickerComp() {
 
   return (
     <View style={styles.container}>
-      <Button title="Pick an image from camera roll" onPress={pickImage} />
+      <OutlinedButton onPress={pickImage}>
+        Pick an image from camera roll
+      </OutlinedButton>
       {image && (
         <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />
       )}
