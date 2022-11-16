@@ -2,17 +2,14 @@ import { useState } from "react";
 import { ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 
 import { Colors } from "../../constants/styles";
-import OutlinedButton from "../ui/OutlinedButton";
+import ImagePickerComp from "./ImagePicker";
+import Camera from "./Camera";
 
 function PlaceForm() {
   const [enteredTitle, setEnteredTitle] = useState("");
 
   function changeTitleHandler(enteredText) {
     setEnteredTitle(enteredText);
-  }
-
-  function addPlaceHandler(enteredTitle) {
-    console.log(enteredTitle);
   }
 
   return (
@@ -25,7 +22,8 @@ function PlaceForm() {
           value={enteredTitle}
         />
       </View>
-      <OutlinedButton onPress={addPlaceHandler}>Add Place</OutlinedButton>
+      <Camera />
+      <ImagePickerComp />
     </ScrollView>
   );
 }
@@ -49,6 +47,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     borderBottomColor: Colors.primary700,
     borderBottomWidth: 2,
-    backgroundColor: Colors.primary50,
+    backgroundColor: Colors.primary100,
   },
 });
