@@ -7,6 +7,7 @@ import LoginScreen from "./screens/LoginScreen";
 import SignupScreen from "./screens/SignupScreen";
 import AddPlace from "./screens/AddPlace";
 import AllPlaces from "./screens/AllPlaces";
+import Map from "./screens/Map";
 import IconButton from "./components/ui/IconButton";
 import { Colors } from "./constants/styles";
 import AuthContextProvider, { AuthContext } from "./store/auth-context";
@@ -68,6 +69,7 @@ function AuthenticatedStack() {
           ),
         }}
       />
+      <Stack.Screen name="Map" component={Map} />
     </Stack.Navigator>
   );
 }
