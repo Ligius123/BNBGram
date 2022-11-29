@@ -1,9 +1,15 @@
 import PlaceForm from "../components/Places/PlaceForm";
 import BackgroundImage from "../components/ui/BackgroundImage";
-function AddPlace() {
+function AddPlace({ navigation }) {
+  function createPlaceHandler(place) {
+    navigation.navigate("AllPlaces", {
+      place: place,
+    });
+  }
+
   return (
     <BackgroundImage>
-      <PlaceForm />
+      <PlaceForm onCreatePlace={createPlaceHandler} />
     </BackgroundImage>
   );
 }
