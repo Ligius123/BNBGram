@@ -3,6 +3,7 @@ import { StyleSheet, View } from "react-native";
 
 import Button from "../ui/Button";
 import Input from "../ui/Input";
+import { Colors } from "../../constants/styles";
 
 function AuthForm({ isLogin, onSubmit, credentialsInvalid }) {
   const [enteredEmail, setEnteredEmail] = useState("");
@@ -96,5 +97,12 @@ export default AuthForm;
 const styles = StyleSheet.create({
   buttons: {
     marginTop: 12,
+  },
+  form: {
+    elevation: 10,
+    shadowColor: Colors.primary500,
+    shadowOffset: { width: 1, height: 1 },
+    shadowOpacity: 0.35,
+    shadowRadius: 4,
   },
 });

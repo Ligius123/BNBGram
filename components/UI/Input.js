@@ -15,6 +15,7 @@ function Input({
       <Text style={[styles.label, isInvalid && styles.labelInvalid]}>
         {label}
       </Text>
+
       <TextInput
         style={[styles.input, isInvalid && styles.inputInvalid]}
         autoCapitalize={false}
@@ -35,11 +36,11 @@ const styles = StyleSheet.create({
     marginVertical: 8,
   },
   label: {
-    color: "black",
+    color: Colors.primary500,
     marginBottom: 4,
   },
   labelInvalid: {
-    color: Colors.error500,
+    color: Colors.error200,
   },
   input: {
     paddingVertical: 8,

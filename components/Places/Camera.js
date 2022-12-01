@@ -6,8 +6,8 @@ import {
 } from "expo-image-picker";
 import { useState } from "react";
 
-import { Colors } from "../../constants/styles";
 import OutlinedButton from "../ui/OutlinedButton";
+import { Colors } from "../../constants/styles";
 
 function Camera({ onTakeImage }) {
   const [pickedImage, setPickedImage] = useState();
@@ -75,9 +75,15 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: Colors.primary100,
+    backgroundColor: Colors.primary900,
     borderRadius: 4,
     overflow: "hidden",
+    opacity: 0.7,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    shadowColor: Colors.primary500,
+    elevation: 5,
   },
   image: {
     width: "100%",

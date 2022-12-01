@@ -35,7 +35,7 @@ function PlaceForm({ onCreatePlace }) {
       <View>
         <Text style={styles.label}>Title</Text>
         <TextInput
-          style={styles.input}
+          style={[styles.input, enteredTitle.length > 0 && styles.highlight]}
           onChangeText={changeTitleHandler}
           value={enteredTitle}
         />
@@ -67,6 +67,22 @@ const styles = StyleSheet.create({
     fontSize: 16,
     borderBottomColor: Colors.primary700,
     borderBottomWidth: 2,
-    backgroundColor: Colors.primary100,
+    backgroundColor: Colors.primary900,
+    opacity: 0.4,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    shadowColor: Colors.primary500,
+    elevation: 7,
+  },
+  highlight: {
+    borderBottomColor: Colors.primary800,
+    borderBottomWidth: 3,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    shadowColor: Colors.primary900,
+    elevation: 10,
+    fontWeight: "bold",
   },
 });

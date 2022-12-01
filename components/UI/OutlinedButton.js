@@ -33,6 +33,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Colors.primary700,
     backgroundColor: Colors.primary400,
+    borderRadius: 8,
+    elevation: 5,
+    shadowColor: Colors.primary500,
+    shadowOffset: { width: 1, height: 1 },
+    shadowOpacity: 0.75,
+    shadowRadius: 4,
+    opacity: 0.8,
   },
   pressed: {
     opacity: 0.7,
@@ -41,6 +48,6 @@ const styles = StyleSheet.create({
     marginRight: 6,
   },
   text: {
-    color: Colors.primary700,
+    color: Colors.primary500,
   },
 });
