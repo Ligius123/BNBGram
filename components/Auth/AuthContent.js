@@ -76,9 +76,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 32,
     padding: 16,
     borderRadius: 8,
-    backgroundColor: Colors.primary800,
-    elevation: 2,
-    shadowColor: "black",
+    backgroundColor: Colors.primary1000,
+    elevation: 10,
+    shadowColor: Colors.primary500,
     shadowOffset: { width: 1, height: 1 },
     shadowOpacity: 0.35,
     shadowRadius: 4,
@@ -86,5 +86,13 @@ const styles = StyleSheet.create({
   },
   buttons: {
     marginTop: 8,
+  },
+  buttonValid: {
+    backgroundColor: Colors.primary900,
+    elevation: 5,
+    shadowColor: Colors.primary500,
+    shadowOffset: { width: 1, height: 1 },
+    shadowOpacity: 0.35,
+    shadowRadius: 4,
   },
 });

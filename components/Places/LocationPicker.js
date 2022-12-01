@@ -124,9 +124,15 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: Colors.primary100,
+    backgroundColor: "#ffffff",
     borderRadius: 4,
     overflow: "hidden",
+    opacity: 0.7,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    shadowColor: Colors.primary500,
+    elevation: 5,
   },
   actions: {
     flexDirection: "row",
@@ -136,6 +142,6 @@ const styles = StyleSheet.create({
   image: {
     width: "100%",
     height: "100%",
-    // borderRadius: 4
+    borderRadius: 4,
   },
 });

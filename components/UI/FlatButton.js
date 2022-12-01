@@ -8,7 +8,7 @@ function FlatButton({ children, onPress }) {
       style={({ pressed }) => [styles.button, pressed && styles.pressed]}
       onPress={onPress}
     >
-      <View>
+      <View style={styles.children}>
         <Text style={styles.buttonText}>{children}</Text>
       </View>
     </Pressable>
