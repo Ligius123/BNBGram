@@ -22,15 +22,18 @@ export default PlaceItem;
 const styles = StyleSheet.create({
   item: {
     flexDirection: "row",
-    alignItems: "flex-start",
+    alignItems: "center",
+    justifyContent: "center",
     borderRadius: 6,
     marginVertical: 12,
-    backgroundColor: Colors.primary500,
-    elevation: 2,
+    backgroundColor: Colors.primary1000,
+    elevation: 5,
     shadowColor: Colors.primary500,
     shadowOpacity: 0.15,
     shadowOffset: { width: 1, height: 1 },
     shadowRadius: 2,
+    opacity: 0.7,
+    // width: "85%",
   },
   pressed: {
     opacity: 0.9,
@@ -39,7 +42,7 @@ const styles = StyleSheet.create({
     flex: 1,
     borderBottomLeftRadius: 4,
     borderTopLeftRadius: 4,
-    height: 100,
+    height: 180,
   },
   info: {
     flex: 2,

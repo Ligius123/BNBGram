@@ -3,6 +3,7 @@ import { useIsFocused } from "@react-navigation/native";
 
 import PlacesList from "../components/Places/PlacesList";
 import BackgroundImage from "../components/ui/BackgroundImage";
+import { fetchPlace } from "../util/http";
 
 function AllPlaces({ route }) {
   const [loadedPlaces, setLoadedPlaces] = useState([]);
@@ -10,8 +11,14 @@ function AllPlaces({ route }) {
   const isFocused = useIsFocused();
 
   useEffect(() => {
+    async function loadPlaces() {
+      const places = await fetchPlace();
+      setLoadedPlaces(places);
+    }
+
     if (isFocused && route.params) {
-      setLoadedPlaces((curPlaces) => [...curPlaces, route.params.place]);
+      loadPlaces();
+      // setLoadedPlaces((curPlaces) => [...curPlaces, route.params.place]);
     }
   }, [isFocused, route]);
 

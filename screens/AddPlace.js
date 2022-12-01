@@ -1,7 +1,9 @@
 import PlaceForm from "../components/Places/PlaceForm";
 import BackgroundImage from "../components/ui/BackgroundImage";
+import { storePlace } from "../util/http";
 function AddPlace({ navigation }) {
-  function createPlaceHandler(place) {
+  async function createPlaceHandler(place) {
+    const id = await storePlace(place);
     navigation.navigate("AllPlaces", {
       place: place,
     });
