@@ -8,6 +8,7 @@ import SignupScreen from "./screens/SignupScreen";
 import AddPlace from "./screens/AddPlace";
 import AllPlaces from "./screens/AllPlaces";
 import Map from "./screens/Map";
+import PlaceDetails from "./screens/PlaceDetails";
 import IconButton from "./components/ui/IconButton";
 import { Colors } from "./constants/styles";
 import AuthContextProvider, { AuthContext } from "./store/auth-context";
@@ -70,6 +71,11 @@ function AuthenticatedStack() {
         }}
       />
       <Stack.Screen name="Map" component={Map} />
+      <Stack.Screen
+        name="PlaceDetails"
+        component={PlaceDetails}
+        options={{ title: "Loading Place..." }}
+      />
     </Stack.Navigator>
   );
 }

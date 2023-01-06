@@ -6,7 +6,7 @@ function PlaceItem({ place, onSelect }) {
   return (
     <Pressable
       style={({ pressed }) => [styles.item, pressed && styles.pressed]}
-      onPress={onSelect}
+      onPress={onSelect.bind(this, place.id)}
     >
       <Image style={styles.image} source={{ uri: place.imageUri }} />
       <View style={styles.info}>
@@ -21,19 +21,17 @@ export default PlaceItem;
 
 const styles = StyleSheet.create({
   item: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
+    flexDirection: "column",
+    // alignItems: "center",
+    // justifyContent: "center",
     borderRadius: 6,
     marginVertical: 12,
-    backgroundColor: Colors.primary1000,
+    // backgroundColor: Colors.primary1000,
     elevation: 5,
     shadowColor: Colors.primary500,
     shadowOpacity: 0.15,
     shadowOffset: { width: 1, height: 1 },
     shadowRadius: 2,
-    opacity: 0.7,
-    // width: "85%",
   },
   pressed: {
     opacity: 0.9,
@@ -45,16 +43,19 @@ const styles = StyleSheet.create({
     height: 180,
   },
   info: {
-    flex: 2,
+    flex: 1,
     padding: 12,
+    height: 100,
+    backgroundColor: Colors.primary1000,
+    opacity: 0.5,
   },
   title: {
     fontWeight: "bold",
     fontSize: 18,
-    color: Colors.gray700,
+    color: Colors.primary500,
   },
   address: {
     fontSize: 12,
-    color: Colors.gray700,
+    color: Colors.primary500,
   },
 });

@@ -8,6 +8,22 @@ export async function storePlace(place) {
   return id;
 }
 
+export async function fecthPlaceDetails(id) {
+  const response = await axios.get(BACKEND_URL + `/place/${id}.json`);
+
+  const place = {
+    id: response.data.id,
+    address: response.data[key].address,
+    location: response.data[key].location,
+    imageUri: response.data[key].imageUri,
+    title: response.data[key].title,
+  };
+
+  console.log("S or randuit in All Places Screen");
+  console.log(place);
+  return place;
+}
+
 export async function fetchPlace() {
   const response = await axios.get(BACKEND_URL + "/place.json");
 
@@ -26,4 +42,12 @@ export async function fetchPlace() {
   }
 
   return places;
+}
+
+export function updatePlace(id, place) {
+  return axios.put(BACKEND_URL + `/place/${id}.json`, place);
+}
+
+export function deletePlace(id) {
+  return axios.delete(BACKEND_URL + `/place/${id}.json`);
 }
