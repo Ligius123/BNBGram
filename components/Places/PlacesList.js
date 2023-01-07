@@ -41,7 +41,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    width: "80%",
+    width: "90%",
+    marginLeft: "5%",
+    marginRight: "5%",
   },
   fallbackText: {
     fontSize: 16,

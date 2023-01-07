@@ -1,4 +1,11 @@
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+} from "react-native";
 
 import { Colors } from "../../constants/styles";
 
@@ -13,6 +20,9 @@ function PlaceItem({ place, onSelect }) {
         <Text style={styles.title}>{place.title}</Text>
         <Text style={styles.address}>{place.address}</Text>
       </View>
+      <ScrollView>
+        <Text style={styles.description}>{place.description}</Text>
+      </ScrollView>
     </Pressable>
   );
 }
@@ -57,5 +67,11 @@ const styles = StyleSheet.create({
   address: {
     fontSize: 12,
     color: Colors.primary500,
+  },
+  description: {
+    fontSize: 12,
+    color: Colors.primary500,
+    height: 150,
+    padding: 12,
   },
 });

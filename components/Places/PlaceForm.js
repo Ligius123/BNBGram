@@ -1,5 +1,12 @@
 import { useCallback, useState } from "react";
-import { ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  Alert,
+} from "react-native";
 
 import { Colors } from "../../constants/styles";
 import Button from "../ui/Button";
@@ -10,6 +17,7 @@ import { Place } from "../../models/place";
 
 function PlaceForm({ onCreatePlace }) {
   const [enteredTitle, setEnteredTitle] = useState("");
+  const [enteredText, setEnteredText] = useState("");
   const [selectedImage, setSelectedImage] = useState();
   const [pickedLocation, setPickedLocation] = useState();
 
@@ -17,7 +25,15 @@ function PlaceForm({ onCreatePlace }) {
     setEnteredTitle(enteredText);
   }
 
+  function changeTextHandler(enteredText) {
+    setEnteredText(enteredText);
+  }
+
   function takeImageHandler(imageUri) {
+    setSelectedImage(imageUri);
+  }
+
+  function chooseImageHandler(imageUri) {
     setSelectedImage(imageUri);
   }
 
@@ -25,9 +41,26 @@ function PlaceForm({ onCreatePlace }) {
     setPickedLocation(location);
   }, []);
 
-  function savePlaceHandler() {
-    const placeData = new Place(enteredTitle, selectedImage, pickedLocation);
-    onCreatePlace(placeData);
+  function savePlaceHandler(event) {
+    const placeData = new Place(
+      enteredTitle,
+      enteredText,
+      selectedImage,
+      pickedLocation
+    );
+    try {
+      onCreatePlace(placeData);
+    } catch (error) {
+      Alert.alert("Insufficient items!", "You need to add more.");
+    }
+    // event?.preventDefault();
+    // if (
+    //   placeData.title.value == null ||
+    //   placeData.imageUri.value == null ||
+    //   placeData.adress.value == null
+    // ) {
+    //   Alert.alert("Insufficient items!", "You need to add more.");
+    // }
   }
 
   return (
@@ -39,9 +72,20 @@ function PlaceForm({ onCreatePlace }) {
           onChangeText={changeTitleHandler}
           value={enteredTitle}
         />
+        <Text style={styles.label}>Description</Text>
+        <ScrollView>
+          <TextInput
+            style={[
+              styles.description,
+              enteredText.length > 0 && styles.highlight,
+            ]}
+            onChangeText={changeTextHandler}
+            value={enteredText}
+          />
+        </ScrollView>
       </View>
       <Camera onTakeImage={takeImageHandler} />
-      <ImagePicker />
+      <ImagePicker onChooseImage={chooseImageHandler} />
       <LocationPicker onPickLocation={pickLocationHandler} />
       <Button onPress={savePlaceHandler}>Add Place</Button>
     </ScrollView>
@@ -74,6 +118,22 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
     shadowColor: Colors.primary500,
     elevation: 7,
+  },
+  description: {
+    marginVertical: 8,
+    paddingHorizontal: 4,
+    paddingVertical: 8,
+    fontSize: 16,
+    borderBottomColor: Colors.primary700,
+    borderBottomWidth: 2,
+    backgroundColor: Colors.primary900,
+    opacity: 0.4,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    shadowColor: Colors.primary500,
+    elevation: 7,
+    height: 100,
   },
   highlight: {
     borderBottomColor: Colors.primary800,

@@ -14,6 +14,7 @@ export async function fecthPlaceDetails(id) {
   const place = {
     id: response.data.id,
     address: response.data[key].address,
+    description: response.data[key].description,
     location: response.data[key].location,
     imageUri: response.data[key].imageUri,
     title: response.data[key].title,
@@ -34,6 +35,7 @@ export async function fetchPlace() {
     const expenseObj = {
       id: key,
       address: response.data[key].address,
+      description: response.data[key].description,
       location: response.data[key].location,
       imageUri: response.data[key].imageUri,
       title: response.data[key].title,

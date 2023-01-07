@@ -39,6 +39,9 @@ function PlaceDetails({ route, navigation }) {
         <View style={styles.addressContainer}>
           <Text style={styles.address}>{fetchedPlace.address}</Text>
         </View>
+        <View style={styles.descriptionContainer}>
+          <Text style={styles.description}>{fetchedPlace.description}</Text>
+        </View>
         <OutlinedButton icon="map" onPress={showOnMapHandler}>
           View on Map
         </OutlinedButton>
@@ -71,6 +74,14 @@ const styles = StyleSheet.create({
     color: Colors.primary500,
     textAlign: "center",
     fontWeight: "bold",
+    fontSize: 16,
+  },
+  descriptionContainer: {
+    padding: 20,
+  },
+  description: {
+    color: Colors.primary500,
+    textAlign: "center",
     fontSize: 16,
   },
 });

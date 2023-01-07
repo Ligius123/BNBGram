@@ -1,3 +1,5 @@
+import { Alert } from "react-native";
+
 import PlaceForm from "../components/Places/PlaceForm";
 import BackgroundImage from "../components/ui/BackgroundImage";
 import { storePlace } from "../util/http";
