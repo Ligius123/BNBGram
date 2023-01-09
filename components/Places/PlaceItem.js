@@ -19,10 +19,10 @@ function PlaceItem({ place, onSelect }) {
       <View style={styles.info}>
         <Text style={styles.title}>{place.title}</Text>
         <Text style={styles.address}>{place.address}</Text>
+        <ScrollView>
+          <Text style={styles.description}>{place.description}</Text>
+        </ScrollView>
       </View>
-      <ScrollView>
-        <Text style={styles.description}>{place.description}</Text>
-      </ScrollView>
     </Pressable>
   );
 }

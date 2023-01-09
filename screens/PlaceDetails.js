@@ -4,8 +4,12 @@ import { ScrollView, Image, View, Text, StyleSheet } from "react-native";
 import OutlinedButton from "../components/ui/OutlinedButton";
 import { Colors } from "../constants/styles";
 import { fetchPlaceDetails } from "../util/http";
+import LoadingOverlay from "../components/ui/LoadingOverlay";
+import ErrorOverlay from "../components/ui/ErrorOverlay";
 
 function PlaceDetails({ route, navigation }) {
+  const [isFetching, setIsFetching] = useState(true);
+  const [error, setError] = useState();
   const [fetchedPlace, setFetchedPlace] = useState();
 
   function showOnMapHandler() {}
@@ -14,23 +18,41 @@ function PlaceDetails({ route, navigation }) {
 
   useEffect(() => {
     async function loadPlaceData() {
-      const place = await fetchPlaceDetails(selectedPlaceId);
-      setFetchedPlace(place);
-      navigation.setOptions({
-        title: place.title,
-      });
+      setIsFetching(true);
+      try {
+        const place = await fetchPlaceDetails(selectedPlaceId);
+        setFetchedPlace(place);
+        navigation.setOptions({
+          title: place.title,
+        });
+      } catch (error) {
+        setError("Could not fetch place details!");
+      }
+      setIsFetching(false);
     }
 
     loadPlaceData();
   }, [selectedPlaceId]);
 
-  if (!fetchedPlace) {
-    return (
-      <View style={styles.fallback}>
-        <Text>Loading place data...</Text>
-      </View>
-    );
+  // function errorHandler() {
+  //   setError(null);
+  // }
+
+  if (error && !isFetching) {
+    return <ErrorOverlay message={error} />;
   }
+
+  if (isFetching) {
+    return <LoadingOverlay message="View place details..." />;
+  }
+
+  // if (!fetchedPlace) {
+  //   return (
+  //     <View style={styles.fallback}>
+  //       <LoadingOverlay message="View place details..." />
+  //     </View>
+  //   );
+  // }
 
   return (
     <ScrollView>

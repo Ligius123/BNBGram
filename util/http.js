@@ -13,11 +13,11 @@ export async function fecthPlaceDetails(id) {
 
   const place = {
     id: response.data.id,
-    address: response.data[key].address,
-    description: response.data[key].description,
-    location: response.data[key].location,
-    imageUri: response.data[key].imageUri,
-    title: response.data[key].title,
+    address: response.data.address,
+    description: response.data.description,
+    location: response.data.location,
+    imageUri: response.data.imageUri,
+    title: response.data.title,
   };
 
   console.log("S or randuit in All Places Screen");

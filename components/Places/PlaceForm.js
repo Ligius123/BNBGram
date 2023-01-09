@@ -41,26 +41,14 @@ function PlaceForm({ onCreatePlace }) {
     setPickedLocation(location);
   }, []);
 
-  function savePlaceHandler(event) {
+  function savePlaceHandler() {
     const placeData = new Place(
       enteredTitle,
       enteredText,
       selectedImage,
       pickedLocation
     );
-    try {
-      onCreatePlace(placeData);
-    } catch (error) {
-      Alert.alert("Insufficient items!", "You need to add more.");
-    }
-    // event?.preventDefault();
-    // if (
-    //   placeData.title.value == null ||
-    //   placeData.imageUri.value == null ||
-    //   placeData.adress.value == null
-    // ) {
-    //   Alert.alert("Insufficient items!", "You need to add more.");
-    // }
+    onCreatePlace(placeData);
   }
 
   return (
