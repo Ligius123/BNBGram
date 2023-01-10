@@ -10,15 +10,16 @@ export default function ImagePickerComp() {
 
   async function pickImage({ onChooseImage }) {
     // No permissions request is necessary for launching the image library
-    let image = await ImagePicker.launchImageLibraryAsync({
+    const image = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
+      base64: true,
     });
 
-    setPickedImage(image.uri);
-    onChooseImage(image.uri);
+    setPickedImage(asset.base64);
+    onChooseImage(asset.base64);
     console.log(image);
 
     if (!result.canceled) {
@@ -29,7 +30,12 @@ export default function ImagePickerComp() {
   let imagePreview = <Text>No image taken yet.</Text>;
 
   if (pickedImage) {
-    imagePreview = <Image style={styles.image} source={{ uri: pickedImage }} />;
+    imagePreview = (
+      <Image
+        style={styles.image}
+        source={{ uri: "data:image/jpeg;base64," + asset.base64 }}
+      />
+    );
   }
 
   return (

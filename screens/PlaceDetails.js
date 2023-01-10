@@ -26,7 +26,7 @@ function PlaceDetails({ route, navigation }) {
           title: place.title,
         });
       } catch (error) {
-        setError("Could not fetch place details!");
+        setError("Could not fetch place details!" + selectedPlaceId);
       }
       setIsFetching(false);
     }
@@ -56,7 +56,8 @@ function PlaceDetails({ route, navigation }) {
 
   return (
     <ScrollView>
-      <Image style={styles.image} source={{ uri: fetchedPlace.imageUri }} />
+      <Image style={styles.image} source={{ uri: fetchedPlace.imageUriC }} />
+      <Image style={styles.image} source={{ uri: fetchedPlace.imageUriG }} />
       <View style={styles.locationContainer}>
         <View style={styles.addressContainer}>
           <Text style={styles.address}>{fetchedPlace.address}</Text>

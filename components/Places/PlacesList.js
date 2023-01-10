@@ -1,5 +1,6 @@
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { useState } from "react";
 
 import { Colors } from "../../constants/styles";
 import PlaceItem from "./PlaceItem";
@@ -23,6 +24,7 @@ function PlacesList({ places }) {
 
   return (
     <View style={styles.alignment}>
+      <Text>{places.length} places to view!</Text>
       <FlatList
         data={places}
         keyExtractor={(item) => item.id}

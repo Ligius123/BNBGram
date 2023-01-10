@@ -8,7 +8,7 @@ export async function storePlace(place) {
   return id;
 }
 
-export async function fecthPlaceDetails(id) {
+export async function fetchPlaceDetails(id) {
   const response = await axios.get(BACKEND_URL + `/place/${id}.json`);
 
   const place = {
@@ -16,11 +16,16 @@ export async function fecthPlaceDetails(id) {
     address: response.data.address,
     description: response.data.description,
     location: response.data.location,
-    imageUri: response.data.imageUri,
+    imageUriC: response.data.imageUriC,
+    imageUriG: response.data.imageUriG,
     title: response.data.title,
   };
 
-  console.log("S or randuit in All Places Screen");
+  console.log("Merge");
+  console.log("Merge");
+  console.log("Merge");
+  console.log("Merge");
+  console.log("Place Details:");
   console.log(place);
   return place;
 }
@@ -29,20 +34,43 @@ export async function fetchPlace() {
   const response = await axios.get(BACKEND_URL + "/place.json");
 
   const places = [];
-  console.log("S or randuit in All Places Screen");
-  console.log(places);
+  // console.log("S or randuit in All Places Screen");
+
   for (const key in response.data) {
-    const expenseObj = {
+    const placeObj = {
       id: key,
       address: response.data[key].address,
       description: response.data[key].description,
       location: response.data[key].location,
-      imageUri: response.data[key].imageUri,
+      imageUriC: response.data[key].imageUriC,
+      imageUriG: response.data[key].imageUriG,
       title: response.data[key].title,
     };
-    places.push(expenseObj);
+    places.push(placeObj);
   }
+  // console.log(places);
+  return places;
+}
 
+export async function fetchPlace1(id) {
+  const response = await axios.get(BACKEND_URL + `/place.json`);
+
+  const places = [];
+  console.log("S or randuit in All Places Screen");
+
+  for (const key in response.data) {
+    const placeObj = {
+      id: key,
+      address: response.data[key].address,
+      description: response.data[key].description,
+      location: response.data[key].location,
+      imageUriC: response.data[key].imageUriC,
+      imageUriG: response.data[key].imageUriG,
+      title: response.data[key].title,
+    };
+    places.push(placeObj);
+  }
+  console.log(places);
   return places;
 }
 

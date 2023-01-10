@@ -10,7 +10,7 @@ import OutlinedButton from "../ui/OutlinedButton";
 import { Colors } from "../../constants/styles";
 
 function Camera({ onTakeImage }) {
-  const [pickedImage, setPickedImage] = useState();
+  const [takedImage, setPickedImage] = useState();
 
   const [cameraPermissionInformation, requestPermission] =
     useCameraPermissions();
@@ -52,8 +52,8 @@ function Camera({ onTakeImage }) {
 
   let imagePreview = <Text>No image taken yet.</Text>;
 
-  if (pickedImage) {
-    imagePreview = <Image style={styles.image} source={{ uri: pickedImage }} />;
+  if (takedImage) {
+    imagePreview = <Image style={styles.image} source={{ uri: takedImage }} />;
   }
 
   return (
