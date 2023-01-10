@@ -30,6 +30,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     opacity: 0.8,
     marginTop: 10,
+    marginBottom: 40,
   },
   pressed: {
     opacity: 0.2,

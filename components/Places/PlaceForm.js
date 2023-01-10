@@ -10,15 +10,25 @@ import { Place } from "../../models/place";
 
 function PlaceForm({ onCreatePlace }) {
   const [enteredTitle, setEnteredTitle] = useState("");
-  const [selectedImage, setSelectedImage] = useState();
+  const [enteredText, setEnteredText] = useState("");
+  const [selectedImageC, setSelectedImageC] = useState();
+  const [selectedImageG, setSelectedImageG] = useState();
   const [pickedLocation, setPickedLocation] = useState();
 
   function changeTitleHandler(enteredText) {
     setEnteredTitle(enteredText);
   }
 
-  function takeImageHandler(imageUri) {
-    setSelectedImage(imageUri);
+  function changeTextHandler(enteredText) {
+    setEnteredText(enteredText);
+  }
+
+  function takeImageHandler(imageUriC) {
+    setSelectedImageC(imageUriC);
+  }
+
+  function chooseImageHandler(imageUriG) {
+    setSelectedImageG(imageUriG);
   }
 
   const pickLocationHandler = useCallback((location) => {
@@ -26,7 +36,13 @@ function PlaceForm({ onCreatePlace }) {
   }, []);
 
   function savePlaceHandler() {
-    const placeData = new Place(enteredTitle, selectedImage, pickedLocation);
+    const placeData = new Place(
+      enteredTitle,
+      enteredText,
+      selectedImageC,
+      selectedImageG,
+      pickedLocation
+    );
     onCreatePlace(placeData);
   }
 
@@ -39,9 +55,20 @@ function PlaceForm({ onCreatePlace }) {
           onChangeText={changeTitleHandler}
           value={enteredTitle}
         />
+        <Text style={styles.label}>Description</Text>
+        <ScrollView>
+          <TextInput
+            style={[
+              styles.description,
+              enteredText.length > 0 && styles.highlight,
+            ]}
+            onChangeText={changeTextHandler}
+            value={enteredText}
+          />
+        </ScrollView>
       </View>
       <Camera onTakeImage={takeImageHandler} />
-      <ImagePicker />
+      <ImagePicker onChooseImage={chooseImageHandler} />
       <LocationPicker onPickLocation={pickLocationHandler} />
       <Button onPress={savePlaceHandler}>Add Place</Button>
     </ScrollView>
@@ -74,6 +101,22 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
     shadowColor: Colors.primary500,
     elevation: 7,
+  },
+  description: {
+    marginVertical: 8,
+    paddingHorizontal: 4,
+    paddingVertical: 8,
+    fontSize: 16,
+    borderBottomColor: Colors.primary700,
+    borderBottomWidth: 2,
+    backgroundColor: Colors.primary900,
+    opacity: 0.4,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    shadowColor: Colors.primary500,
+    elevation: 7,
+    height: 100,
   },
   highlight: {
     borderBottomColor: Colors.primary800,
