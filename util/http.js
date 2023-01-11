@@ -8,6 +8,15 @@ export async function storePlace(place) {
   return id;
 }
 
+export async function storeFavoritePlace(place) {
+  const response = await axios.post(
+    BACKEND_URL + "/place/favoriteplaces.json",
+    place
+  );
+  const id = response.data.name;
+  return id;
+}
+
 export async function fetchPlaceDetails(id) {
   const response = await axios.get(BACKEND_URL + `/place/${id}.json`);
 
@@ -21,11 +30,6 @@ export async function fetchPlaceDetails(id) {
     title: response.data.title,
   };
 
-  console.log("Merge");
-  console.log("Merge");
-  console.log("Merge");
-  console.log("Merge");
-  console.log("Place Details:");
   console.log(place);
   return place;
 }
@@ -52,8 +56,8 @@ export async function fetchPlace() {
   return places;
 }
 
-export async function fetchPlace1(id) {
-  const response = await axios.get(BACKEND_URL + `/place.json`);
+export async function fetchFavoritePlace() {
+  const response = await axios.get(BACKEND_URL + "/place/favoriteplaces.json");
 
   const places = [];
   console.log("S or randuit in All Places Screen");

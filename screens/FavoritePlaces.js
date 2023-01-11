@@ -3,11 +3,11 @@ import { useIsFocused } from "@react-navigation/native";
 
 import PlacesList from "../components/Places/PlacesList";
 import BackgroundImage from "../components/ui/BackgroundImage";
-import { fetchPlace } from "../util/http";
+import { fetchFavoritePlace } from "../util/http";
 import LoadingOverlay from "../components/ui/LoadingOverlay";
 import ErrorOverlay from "../components/ui/ErrorOverlay";
 
-function AllPlaces({ route }) {
+function FavoritePlaces({ route }) {
   const [isFetching, setIsFetching] = useState(false);
   const [error, setError] = useState();
   const [loadedPlaces, setLoadedPlaces] = useState([]);
@@ -18,7 +18,7 @@ function AllPlaces({ route }) {
     async function loadPlaces() {
       setIsFetching(true);
       try {
-        const places = await fetchPlace();
+        const places = await fetchFavoritePlace();
         setLoadedPlaces(places);
       } catch (error) {
         setError("Could not fetch places!");
@@ -26,8 +26,10 @@ function AllPlaces({ route }) {
       setIsFetching(false);
     }
 
-    loadPlaces();
-    // setLoadedPlaces((curPlaces) => [...curPlaces, route.params.place]);
+    if (isFocused && route.params) {
+      loadPlaces();
+      // setLoadedPlaces((curPlaces) => [...curPlaces, route.params.place]);
+    }
   }, [isFocused, route]);
 
   if (error && !isFetching) {
@@ -45,4 +47,4 @@ function AllPlaces({ route }) {
   );
 }
 
-export default AllPlaces;
+export default FavoritePlaces;
