@@ -8,37 +8,13 @@ import {
 } from "react-native";
 
 import { Colors } from "../../constants/styles";
-import FavoriteButton from "../ui/FavoriteButton";
-import { FavoritesContext } from "../../store/favorites-context";
-import { useContext, useEffect, useState } from "react";
 
 function PlaceItem({ place, onSelect }) {
-  // const favoritePlacesCtx = useContext(FavoritesContext);
-  // const placeId = route.params.placeId;
-  // function changeFavoriteStatusHandler() {
-  //   if (placeIsFavorite) {
-  //     favoritePlacesCtx.removeFavorite(placeId);
-  //   } else {
-  //     favoritePlacesCtx.addFavorite(placeId);
-  //   }
-  // }
-
-  const [outline, setOutline] = useState(false);
-
-  function changeFavoriteStatusHandler() {
-    setOutline(true);
-  }
-
   return (
     <Pressable
       style={({ pressed }) => [styles.item, pressed && styles.pressed]}
       onPress={onSelect.bind(this, place.id)}
     >
-      <FavoriteButton
-        icon={outline ? "star" : "star-outline"}
-        color="white"
-        onPress={changeFavoriteStatusHandler}
-      />
       <Image style={styles.image} source={{ uri: place.imageUriC }} />
       <Image style={styles.image} source={{ uri: place.imageUriG }} />
       <View style={styles.info}>
@@ -67,6 +43,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.15,
     shadowOffset: { width: 1, height: 1 },
     shadowRadius: 2,
+    padding: 5,
   },
   pressed: {
     opacity: 0.9,
@@ -82,7 +59,7 @@ const styles = StyleSheet.create({
     padding: 12,
     height: 100,
     backgroundColor: Colors.primary1000,
-    opacity: 0.5,
+    // opacity: 0.5,
   },
   title: {
     fontWeight: "bold",
