@@ -12,7 +12,12 @@ function PlaceDetails({ route, navigation }) {
   const [error, setError] = useState();
   const [fetchedPlace, setFetchedPlace] = useState();
 
-  function showOnMapHandler() {}
+  function showOnMapHandler() {
+    navigation.navigate("Map", {
+      initialLat: fetchedPlace.location.lat,
+      initialLng: fetchedPlace.location.lng,
+    });
+  }
 
   const selectedPlaceId = route.params.placeId;
 
@@ -34,10 +39,6 @@ function PlaceDetails({ route, navigation }) {
     loadPlaceData();
   }, [selectedPlaceId]);
 
-  // function errorHandler() {
-  //   setError(null);
-  // }
-
   if (error && !isFetching) {
     return <ErrorOverlay message={error} />;
   }
@@ -45,14 +46,6 @@ function PlaceDetails({ route, navigation }) {
   if (isFetching) {
     return <LoadingOverlay message="View place details..." />;
   }
-
-  // if (!fetchedPlace) {
-  //   return (
-  //     <View style={styles.fallback}>
-  //       <LoadingOverlay message="View place details..." />
-  //     </View>
-  //   );
-  // }
 
   return (
     <ScrollView>
