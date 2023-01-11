@@ -13,6 +13,7 @@ import IconButton from "./components/ui/IconButton";
 import { Colors } from "./constants/styles";
 import AuthContextProvider, { AuthContext } from "./store/auth-context";
 import FavoritesContextProvider from "./store/favorites-context";
+import FavoritePlaces from "./screens/FavoritePlaces";
 
 const Stack = createNativeStackNavigator();
 
@@ -77,6 +78,11 @@ function AuthenticatedStack() {
           name="PlaceDetails"
           component={PlaceDetails}
           options={{ title: "Loading Place..." }}
+        />
+        <Stack.Screen
+          name="FavoritePlaces"
+          component={FavoritePlaces}
+          options={{ title: "Loading Favorite Places..." }}
         />
       </Stack.Navigator>
     </FavoritesContextProvider>

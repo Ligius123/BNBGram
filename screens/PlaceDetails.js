@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useLayoutEffect } from "react";
 import { ScrollView, Image, View, Text, StyleSheet } from "react-native";
 
 import OutlinedButton from "../components/ui/OutlinedButton";
@@ -7,10 +7,14 @@ import { fetchPlaceDetails } from "../util/http";
 import LoadingOverlay from "../components/ui/LoadingOverlay";
 import ErrorOverlay from "../components/ui/ErrorOverlay";
 
+import FavoriteButton from "../components/ui/FavoriteButton";
+
 function PlaceDetails({ route, navigation }) {
   const [isFetching, setIsFetching] = useState(true);
   const [error, setError] = useState();
   const [fetchedPlace, setFetchedPlace] = useState();
+
+  const [isFavorite, setIsFavorite] = useState(false);
 
   function showOnMapHandler() {
     navigation.navigate("Map", {
@@ -20,6 +24,36 @@ function PlaceDetails({ route, navigation }) {
   }
 
   const selectedPlaceId = route.params.placeId;
+
+  async function changeFavoriteStatusHandler() {
+    setIsFetching(true);
+    try {
+      const favPlace = await fetchFavoritePlace(selectedPlaceId);
+      setIsFavorite(true);
+      setFetchedPlace(favPlace);
+      navigation.navigate("FavoritePlaces", {
+        place: place,
+      });
+    } catch (error) {
+      setError("Could not add a place!");
+      Alert.alert("Not enough arguments", "You have to fill al the fields");
+    }
+    setIsFetching(false);
+  }
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => {
+        return (
+          <FavoriteButton
+            icon={isFavorite ? "star" : "star-outline"}
+            color="white"
+            onCreateFavoritePlace={changeFavoriteStatusHandler}
+          />
+        );
+      },
+    });
+  }, [navigation, changeFavoriteStatusHandler]);
 
   useEffect(() => {
     async function loadPlaceData() {
