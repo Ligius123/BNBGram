@@ -3,10 +3,10 @@ import { ScrollView, Image, View, Text, StyleSheet } from "react-native";
 
 import OutlinedButton from "../components/ui/OutlinedButton";
 import { Colors } from "../constants/styles";
-import { fetchPlaceDetails } from "../util/http";
+import { fetchPlaceDetails, deletePlace } from "../util/http";
 import LoadingOverlay from "../components/ui/LoadingOverlay";
 import ErrorOverlay from "../components/ui/ErrorOverlay";
-
+import IconButton from "../components/ui/IconButton";
 import FavoriteButton from "../components/ui/FavoriteButton";
 
 function PlaceDetails({ route, navigation }) {
@@ -81,6 +81,12 @@ function PlaceDetails({ route, navigation }) {
     return <LoadingOverlay message="View place details..." />;
   }
 
+  async function deletePlaceHandler() {
+    await deletePlace(selectedPlaceId);
+    navigation.goBack();
+    console.log("Delete");
+  }
+
   return (
     <ScrollView>
       <Image style={styles.image} source={{ uri: fetchedPlace.imageUriC }} />
@@ -95,6 +101,14 @@ function PlaceDetails({ route, navigation }) {
         <OutlinedButton icon="map" onPress={showOnMapHandler}>
           View on Map
         </OutlinedButton>
+        <View style={styles.deleteContainer}>
+          <IconButton
+            icon="trash"
+            color={"black"}
+            size={36}
+            onPress={deletePlaceHandler}
+          />
+        </View>
       </View>
     </ScrollView>
   );
@@ -133,5 +147,13 @@ const styles = StyleSheet.create({
     color: Colors.primary500,
     textAlign: "center",
     fontSize: 16,
+  },
+  deleteContainer: {
+    marginTop: 16,
+    paddingTop: 8,
+    borderTopWidth: 2,
+    borderTopColor: "whites",
+    alignItems: "center",
+    marginBottom: 32,
   },
 });
