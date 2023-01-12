@@ -20,12 +20,24 @@ export default function ImagePickerComp() {
 
     setPickedImage(asset.base64);
     onChooseImage(asset.base64);
-    console.log(image);
+    console.log("Imaginea este asta" + image);
+    console.log(base64);
 
-    if (!result.canceled) {
-      setPickedImage(result.assets[0].uri);
+    if (!image.canceled) {
+      setPickedImage(image.assets[0].base64);
     }
   }
+
+  const _compressImage = async (image) => {
+    const manipResult = await manipulateAsync(
+      image.localUri || image.uri,
+      [{ rotate: 0 }],
+      { compress: 0.25, format: SaveFormat.PNG, base64: true }
+    );
+
+    return manipResult;
+    //   setImage(manipResult);
+  };
 
   let imagePreview = <Text>No image taken yet.</Text>;
 
@@ -33,10 +45,12 @@ export default function ImagePickerComp() {
     imagePreview = (
       <Image
         style={styles.image}
-        source={{ uri: "data:image/jpeg;base64," + asset.base64 }}
+        source={{ uri: "data:image/jpeg;base64," + pickedImage }}
       />
     );
   }
+
+  // "data:image/jpeg;base64," + asset.base64
 
   return (
     <View>
