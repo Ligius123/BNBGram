@@ -14,6 +14,8 @@ import { Colors } from "./constants/styles";
 import AuthContextProvider, { AuthContext } from "./store/auth-context";
 import FavoritesContextProvider from "./store/favorites-context";
 import FavoritePlaces from "./screens/FavoritePlaces";
+import HowMany from "./screens/HowMany";
+import PlacesNumberContextProvider from "./store/numberPlaces-context";
 
 const Stack = createNativeStackNavigator();
 
@@ -35,57 +37,61 @@ function AuthStack() {
 function AuthenticatedStack() {
   const authCtx = useContext(AuthContext);
   return (
-    <FavoritesContextProvider>
-      <Stack.Navigator
-        screenOptions={{
-          headerStyle: { backgroundColor: Colors.primary500 },
-          headerTintColor: "white",
-          contentStyle: { backgroundColor: Colors.primary100 },
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: { backgroundColor: Colors.primary500 },
+        headerTintColor: "white",
+        contentStyle: { backgroundColor: Colors.primary100 },
+      }}
+    >
+      <Stack.Screen
+        name="HowMany"
+        component={HowMany}
+        options={{ title: "Welcome to BNBGram..." }}
+      />
+
+      <Stack.Screen
+        name="AllPlaces"
+        component={AllPlaces}
+        options={({ navigation }) => ({
+          title: "Your Favorite Places",
+          headerRight: ({ tintColor }) => (
+            <IconButton
+              icon="add"
+              size={24}
+              color={tintColor}
+              onPress={() => navigation.navigate("AddPlace")}
+            />
+          ),
+        })}
+      />
+      <Stack.Screen
+        name="AddPlace"
+        component={AddPlace}
+        options={{
+          title: "Add a new Place",
+          headerRight: ({ tintColor }) => (
+            <IconButton
+              icon="exit"
+              color={tintColor}
+              size={24}
+              onPress={authCtx.logout}
+            />
+          ),
         }}
-      >
-        <Stack.Screen
-          name="AllPlaces"
-          component={AllPlaces}
-          options={({ navigation }) => ({
-            title: "Your Favorite Places",
-            headerRight: ({ tintColor }) => (
-              <IconButton
-                icon="add"
-                size={24}
-                color={tintColor}
-                onPress={() => navigation.navigate("AddPlace")}
-              />
-            ),
-          })}
-        />
-        <Stack.Screen
-          name="AddPlace"
-          component={AddPlace}
-          options={{
-            title: "Add a new Place",
-            headerRight: ({ tintColor }) => (
-              <IconButton
-                icon="exit"
-                color={tintColor}
-                size={24}
-                onPress={authCtx.logout}
-              />
-            ),
-          }}
-        />
-        <Stack.Screen name="Map" component={Map} />
-        <Stack.Screen
-          name="PlaceDetails"
-          component={PlaceDetails}
-          options={{ title: "Loading Place..." }}
-        />
-        <Stack.Screen
-          name="FavoritePlaces"
-          component={FavoritePlaces}
-          options={{ title: "Loading Favorite Places..." }}
-        />
-      </Stack.Navigator>
-    </FavoritesContextProvider>
+      />
+      <Stack.Screen name="Map" component={Map} />
+      <Stack.Screen
+        name="PlaceDetails"
+        component={PlaceDetails}
+        options={{ title: "Loading Place..." }}
+      />
+      <Stack.Screen
+        name="FavoritePlaces"
+        component={FavoritePlaces}
+        options={{ title: "Loading Favorite Places..." }}
+      />
+    </Stack.Navigator>
   );
 }
 
@@ -105,7 +111,9 @@ export default function App() {
     <>
       <StatusBar style="light" />
       <AuthContextProvider>
-        <Navigation />
+        <PlacesNumberContextProvider>
+          <Navigation />
+        </PlacesNumberContextProvider>
       </AuthContextProvider>
     </>
   );

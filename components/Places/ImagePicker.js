@@ -15,16 +15,16 @@ export default function ImagePickerComp() {
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
-      base64: true,
+      // base64: true,
     });
 
-    setPickedImage(asset.base64);
-    onChooseImage(asset.base64);
+    setPickedImage(image.assets[0].uri);
+    onChooseImage(image.assets[0].uri);
     console.log("Imaginea este asta" + image);
     console.log(base64);
 
     if (!image.canceled) {
-      setPickedImage(image.assets[0].base64);
+      setPickedImage(image.assets[0].uri);
     }
   }
 
@@ -42,12 +42,7 @@ export default function ImagePickerComp() {
   let imagePreview = <Text>No image taken yet.</Text>;
 
   if (pickedImage) {
-    imagePreview = (
-      <Image
-        style={styles.image}
-        source={{ uri: "data:image/jpeg;base64," + pickedImage }}
-      />
-    );
+    imagePreview = <Image style={styles.image} source={{ uri: pickedImage }} />;
   }
 
   // "data:image/jpeg;base64," + asset.base64

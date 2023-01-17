@@ -9,9 +9,12 @@ export const Colors = {
   primary800: "#27b3f5cc",
   primary900: "#ffffff",
   primary1000: "#f6c869",
+  primary1100: "#4e0329",
+  primary1200: "#ddb52f",
   accent500: "#e6b30b",
   gray700: "#221c30",
   error100: "#fcdcbf",
   error200: "#ff0000",
   error500: "#f37c13",
 };
+// #4e0329

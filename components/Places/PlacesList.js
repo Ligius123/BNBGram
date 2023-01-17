@@ -1,12 +1,19 @@
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { useState } from "react";
+import { useContext } from "react";
+import { useEffect } from "react";
 
+import { PlacesNumberContext } from "../../store/numberPlaces-context";
 import { Colors } from "../../constants/styles";
 import PlaceItem from "./PlaceItem";
 
 function PlacesList({ places }) {
   const navigation = useNavigation();
+  const numberOfPlaces = useContext(PlacesNumberContext);
+
+  useEffect(() => {
+    numberOfPlaces.getNumberOfPlaces(places.length);
+  }, [places.length]);
 
   function selectPlaceHandler(id) {
     navigation.navigate("PlaceDetails", { placeId: id });
@@ -24,7 +31,9 @@ function PlacesList({ places }) {
 
   return (
     <View style={styles.alignment}>
-      <Text>{places.length} places to view!</Text>
+      <Text style={styles.number}>
+        {numberOfPlaces.numberOfPlaces} places to view!
+      </Text>
       <FlatList
         data={places}
         keyExtractor={(item) => item.id}
@@ -52,7 +61,21 @@ const styles = StyleSheet.create({
     color: Colors.primary200,
   },
   alignment: {
+    flex: 1,
     marginLeft: "5%",
     marginRight: "5%",
+  },
+  number: {
+    marginTop: 4,
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    marginLeft: "25%",
+    padding: 8,
+    borderRadius: 4,
+    backgroundColor: Colors.primary1000,
+    width: "50%",
+    elevation: 10,
+    opacity: 0.5,
   },
 });

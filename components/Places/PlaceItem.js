@@ -6,23 +6,43 @@ import {
   View,
   ScrollView,
 } from "react-native";
+import { useState } from "react";
 
 import { Colors } from "../../constants/styles";
+import IconButton from "../ui/IconButton";
 
 function PlaceItem({ place, onSelect }) {
+  const [like, setLike] = useState(0);
+  const [isCliked, setIsClicked] = useState(false);
+
+  async function likeHandler() {
+    setLike((prevLike) => prevLike + 1);
+    setIsClicked(true);
+  }
+
   return (
     <Pressable
       style={({ pressed }) => [styles.item, pressed && styles.pressed]}
       onPress={onSelect.bind(this, place.id)}
     >
       <Image style={styles.image} source={{ uri: place.imageUriC }} />
-      <Image style={styles.image} source={{ uri: place.imageUriG }} />
+      {/* <Image style={styles.image} source={{ uri: place.imageUriG }} /> */}
+
       <View style={styles.info}>
         <Text style={styles.title}>{place.title}</Text>
         <Text style={styles.address}>{place.address}</Text>
         <ScrollView>
-          <Text style={styles.description}>{place.description}</Text>
+          <Text style={styles.description}>"{place.description}"</Text>
         </ScrollView>
+        <View style={styles.position}>
+          <IconButton
+            icon="thumbs-up"
+            color={isCliked ? Colors.primary500 : Colors.primary100}
+            size={36}
+            onPress={likeHandler}
+          />
+          <Text>{like} likes</Text>
+        </View>
       </View>
     </Pressable>
   );
@@ -57,7 +77,7 @@ const styles = StyleSheet.create({
   info: {
     flex: 1,
     padding: 12,
-    height: 100,
+    height: 150,
     backgroundColor: Colors.primary1000,
     // opacity: 0.5,
   },
@@ -73,7 +93,10 @@ const styles = StyleSheet.create({
   description: {
     fontSize: 12,
     color: Colors.primary500,
-    height: 150,
     padding: 12,
+  },
+  position: {
+    flexDirection: "row",
+    alignItems: "center",
   },
 });
