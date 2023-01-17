@@ -8,12 +8,13 @@ import LoadingOverlay from "../components/ui/LoadingOverlay";
 import ErrorOverlay from "../components/ui/ErrorOverlay";
 import IconButton from "../components/ui/IconButton";
 import FavoriteButton from "../components/ui/FavoriteButton";
+import { LinearGradient } from "expo-linear-gradient";
 
 function PlaceDetails({ route, navigation }) {
   const [isFetching, setIsFetching] = useState(true);
   const [error, setError] = useState();
   const [fetchedPlace, setFetchedPlace] = useState();
-
+  const [isDeleting, setIsDeleting] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
 
   function showOnMapHandler() {
@@ -82,34 +83,49 @@ function PlaceDetails({ route, navigation }) {
   }
 
   async function deletePlaceHandler() {
-    await deletePlace(selectedPlaceId);
-    navigation.goBack();
-    console.log("Delete");
+    setIsDeleting(true);
+    try {
+      await deletePlace(selectedPlaceId);
+      navigation.goBack();
+    } catch (error) {
+      setError("Could not delete place!" + selectedPlaceId);
+    }
+    setIsDeleting(false);
+  }
+
+  if (error && !isDeleting) {
+    return <ErrorOverlay message={error} />;
+  }
+
+  if (isDeleting) {
+    return <LoadingOverlay message="Deleting place..." />;
   }
 
   return (
     <ScrollView>
-      <Image style={styles.image} source={{ uri: fetchedPlace.imageUriC }} />
-      <Image style={styles.image} source={{ uri: fetchedPlace.imageUriG }} />
-      <View style={styles.locationContainer}>
-        <View style={styles.addressContainer}>
-          <Text style={styles.address}>{fetchedPlace.address}</Text>
+      <LinearGradient colors={[Colors.primary1100, Colors.primary1200]}>
+        <Image style={styles.image} source={{ uri: fetchedPlace.imageUriC }} />
+        <Image style={styles.image} source={{ uri: fetchedPlace.imageUriG }} />
+        <View style={styles.locationContainer}>
+          <View style={styles.addressContainer}>
+            <Text style={styles.address}>{fetchedPlace.address}</Text>
+          </View>
+          <ScrollView style={styles.descriptionContainer}>
+            <Text style={styles.description}>"{fetchedPlace.description}"</Text>
+          </ScrollView>
+          <OutlinedButton icon="map" onPress={showOnMapHandler}>
+            View on Map
+          </OutlinedButton>
+          <View style={styles.deleteContainer}>
+            <IconButton
+              icon="trash"
+              color={"black"}
+              size={36}
+              onPress={deletePlaceHandler}
+            />
+          </View>
         </View>
-        <View style={styles.descriptionContainer}>
-          <Text style={styles.description}>{fetchedPlace.description}</Text>
-        </View>
-        <OutlinedButton icon="map" onPress={showOnMapHandler}>
-          View on Map
-        </OutlinedButton>
-        <View style={styles.deleteContainer}>
-          <IconButton
-            icon="trash"
-            color={"black"}
-            size={36}
-            onPress={deletePlaceHandler}
-          />
-        </View>
-      </View>
+      </LinearGradient>
     </ScrollView>
   );
 }
@@ -126,10 +142,12 @@ const styles = StyleSheet.create({
     height: "35%",
     minHeight: 300,
     width: "100%",
+    elevation: 5,
   },
   locationContainer: {
     justifyContent: "center",
     alignItems: "center",
+    // height: "100%",
   },
   addressContainer: {
     padding: 20,
@@ -142,6 +160,15 @@ const styles = StyleSheet.create({
   },
   descriptionContainer: {
     padding: 20,
+    backgroundColor: Colors.primary300,
+    opacity: 0.5,
+    borderRadius: 16,
+    elevation: 5,
+    shadowOpacity: 0.15,
+    shadowOffset: { width: 1, height: 1 },
+    shadowRadius: 2,
+    marginBottom: 8,
+    width: "90%",
   },
   description: {
     color: Colors.primary500,

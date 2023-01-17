@@ -1,11 +1,11 @@
-import { ImageBackground, StyleSheet } from "react-native";
+import { ImageBackground, StyleSheet, View } from "react-native";
 
 export default function BackgroundImage({ children }) {
   return (
     <ImageBackground
       source={require("../../assets/images/roma.png")}
       resizeMode="cover"
-      style={styles.rootScreen}
+      style={styles.rootScreen || styles.children}
       imageStyle={styles.backgroundImage}
     >
       {children}
