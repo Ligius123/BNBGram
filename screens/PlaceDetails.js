@@ -1,5 +1,7 @@
 import { useEffect, useState, useLayoutEffect } from "react";
 import { ScrollView, Image, View, Text, StyleSheet } from "react-native";
+import { useContext } from "react";
+import { FavoritesContext } from "../store/favorites-context";
 
 import OutlinedButton from "../components/ui/OutlinedButton";
 import { Colors } from "../constants/styles";
@@ -15,7 +17,6 @@ function PlaceDetails({ route, navigation }) {
   const [error, setError] = useState();
   const [fetchedPlace, setFetchedPlace] = useState();
   const [isDeleting, setIsDeleting] = useState(false);
-  const [isFavorite, setIsFavorite] = useState(false);
 
   function showOnMapHandler() {
     navigation.navigate("Map", {
@@ -24,22 +25,21 @@ function PlaceDetails({ route, navigation }) {
     });
   }
 
+  const favoritePlaces = useContext(FavoritesContext);
   const selectedPlaceId = route.params.placeId;
 
+  const placeIsFavorite = favoritePlaces.ids.includes(selectedPlaceId);
+
   async function changeFavoriteStatusHandler() {
-    setIsFetching(true);
-    try {
-      const favPlace = await fetchFavoritePlace(selectedPlaceId);
-      setIsFavorite(true);
-      setFetchedPlace(favPlace);
-      navigation.navigate("FavoritePlaces", {
-        place: place,
-      });
-    } catch (error) {
-      setError("Could not add a place!");
-      Alert.alert("Not enough arguments", "You have to fill al the fields");
+    console.log("pressed!");
+    if (placeIsFavorite) {
+      favoritePlaces.removeFavorite(selectedPlaceId);
+    } else {
+      favoritePlaces.addFavorite(selectedPlaceId);
     }
-    setIsFetching(false);
+    navigation.navigate("FavoritePlaces", {
+      ids: favoritePlaces.ids,
+    });
   }
 
   useLayoutEffect(() => {
@@ -47,7 +47,7 @@ function PlaceDetails({ route, navigation }) {
       headerRight: () => {
         return (
           <FavoriteButton
-            icon={isFavorite ? "star" : "star-outline"}
+            icon={placeIsFavorite ? "star" : "star-outline"}
             color="white"
             onCreateFavoritePlace={changeFavoriteStatusHandler}
           />
@@ -66,7 +66,9 @@ function PlaceDetails({ route, navigation }) {
           title: place.title,
         });
       } catch (error) {
-        setError("Could not fetch place details!" + selectedPlaceId);
+        setError(
+          "Could not fetch place details for " + selectedPlaceId.title + "!"
+        );
       }
       setIsFetching(false);
     }
@@ -88,7 +90,7 @@ function PlaceDetails({ route, navigation }) {
       await deletePlace(selectedPlaceId);
       navigation.goBack();
     } catch (error) {
-      setError("Could not delete place!" + selectedPlaceId);
+      setError("Could not delete place!" + selectedPlaceId.id);
     }
     setIsDeleting(false);
   }

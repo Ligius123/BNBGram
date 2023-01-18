@@ -8,15 +8,6 @@ export async function storePlace(place) {
   return id;
 }
 
-export async function storeFavoritePlace(place) {
-  const response = await axios.post(
-    BACKEND_URL + "/place/favoriteplaces.json",
-    place
-  );
-  const id = response.data.name;
-  return id;
-}
-
 export async function fetchPlaceDetails(id) {
   const response = await axios.get(BACKEND_URL + `/place/${id}.json`);
 
@@ -56,11 +47,11 @@ export async function fetchPlace() {
   return places;
 }
 
-export async function fetchFavoritePlace() {
-  const response = await axios.get(BACKEND_URL + "/place/favoriteplaces.json");
+export async function fetchFavoritePlace(ids) {
+  const response = await axios.get(BACKEND_URL + "/place.json");
 
   const places = [];
-  console.log("S or randuit in All Places Screen");
+  // console.log("S or randuit in All Places Screen");
 
   for (const key in response.data) {
     const placeObj = {
@@ -74,7 +65,7 @@ export async function fetchFavoritePlace() {
     };
     places.push(placeObj);
   }
-  console.log(places);
+  // console.log(places);
   return places;
 }
 

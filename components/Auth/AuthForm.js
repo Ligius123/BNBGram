@@ -1,15 +1,22 @@
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
 import { StyleSheet, View } from "react-native";
 
 import Button from "../ui/Button";
 import Input from "../ui/Input";
 import { Colors } from "../../constants/styles";
+import { UserContext } from "../../store/user-context";
 
 function AuthForm({ isLogin, onSubmit, credentialsInvalid }) {
   const [enteredEmail, setEnteredEmail] = useState("");
   const [enteredConfirmEmail, setEnteredConfirmEmail] = useState("");
   const [enteredPassword, setEnteredPassword] = useState("");
   const [enteredConfirmPassword, setEnteredConfirmPassword] = useState("");
+
+  const userCtx = useContext(UserContext);
+
+  useEffect(() => {
+    userCtx.storeEmail(enteredEmail);
+  }, [enteredEmail]);
 
   const {
     email: emailIsInvalid,

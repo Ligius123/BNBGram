@@ -1,50 +1,38 @@
-import { useEffect, useState } from "react";
-import { useIsFocused } from "@react-navigation/native";
+import { View, Text, StyleSheet } from "react-native";
+import { useContext } from "react";
 
 import PlacesList from "../components/Places/PlacesList";
-import BackgroundImage from "../components/ui/BackgroundImage";
-import { fetchFavoritePlace } from "../util/http";
-import LoadingOverlay from "../components/ui/LoadingOverlay";
-import ErrorOverlay from "../components/ui/ErrorOverlay";
+import { FavoritesContext } from "../store/favorites-context";
 
-function FavoritePlaces({ route }) {
-  const [isFetching, setIsFetching] = useState(false);
-  const [error, setError] = useState();
-  const [loadedPlaces, setLoadedPlaces] = useState([]);
+function FavoritesScreen() {
+  const favoritePlacesCtx = useContext(FavoritesContext);
 
-  const isFocused = useIsFocused();
-
-  useEffect(() => {
-    async function loadPlaces() {
-      setIsFetching(true);
-      try {
-        const places = await fetchFavoritePlace();
-        setLoadedPlaces(places);
-      } catch (error) {
-        setError("Could not fetch places!");
-      }
-      setIsFetching(false);
-    }
-
-    if (isFocused && route.params) {
-      loadPlaces();
-      // setLoadedPlaces((curPlaces) => [...curPlaces, route.params.place]);
-    }
-  }, [isFocused, route]);
-
-  if (error && !isFetching) {
-    return <ErrorOverlay message={error} />;
-  }
-
-  if (isFetching) {
-    return <LoadingOverlay message="View all places..." />;
-  }
-
-  return (
-    <BackgroundImage>
-      <PlacesList places={loadedPlaces} />
-    </BackgroundImage>
+  const favoritePlaces = favoritePlacesCtx.allIds.filter((placeId) =>
+    favoritePlacesCtx.ids.includes(placeId)
   );
+
+  if (favoritePlaces.length === 0) {
+    return (
+      <View style={styles.rootContainer}>
+        <Text style={styles.text}>You have no favorite places yet.</Text>
+      </View>
+    );
+  }
+
+  return <PlacesList items={favoritePlaces} />;
 }
 
-export default FavoritePlaces;
+export default FavoritesScreen;
+
+const styles = StyleSheet.create({
+  rootContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  text: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "white",
+  },
+});
