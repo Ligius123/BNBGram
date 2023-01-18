@@ -6,10 +6,12 @@ import {
   View,
   ScrollView,
 } from "react-native";
-import { useState } from "react";
+import { useState, useContext } from "react";
 
 import { Colors } from "../../constants/styles";
 import IconButton from "../ui/IconButton";
+import { UserContext } from "../../store/user-context";
+import { LinearGradient } from "expo-linear-gradient";
 
 function PlaceItem({ place, onSelect }) {
   const [like, setLike] = useState(0);
@@ -20,30 +22,35 @@ function PlaceItem({ place, onSelect }) {
     setIsClicked(true);
   }
 
+  const UserCtx = useContext(UserContext);
+
   return (
     <Pressable
       style={({ pressed }) => [styles.item, pressed && styles.pressed]}
       onPress={onSelect.bind(this, place.id)}
     >
-      <Image style={styles.image} source={{ uri: place.imageUriC }} />
-      {/* <Image style={styles.image} source={{ uri: place.imageUriG }} /> */}
+      <LinearGradient colors={[Colors.primary1100, Colors.primary1200]}>
+        <Text>{UserCtx.email}</Text>
+        <Image style={styles.image} source={{ uri: place.imageUriC }} />
+        {/* <Image style={styles.image} source={{ uri: place.imageUriG }} /> */}
 
-      <View style={styles.info}>
-        <Text style={styles.title}>{place.title}</Text>
-        <Text style={styles.address}>{place.address}</Text>
-        <ScrollView>
-          <Text style={styles.description}>"{place.description}"</Text>
-        </ScrollView>
-        <View style={styles.position}>
-          <IconButton
-            icon="thumbs-up"
-            color={isCliked ? Colors.primary500 : Colors.primary100}
-            size={36}
-            onPress={likeHandler}
-          />
-          <Text>{like} likes</Text>
+        <View style={styles.info}>
+          <Text style={styles.title}>{place.title}</Text>
+          <Text style={styles.address}>{place.address}</Text>
+          <ScrollView>
+            <Text style={styles.description}>"{place.description}"</Text>
+          </ScrollView>
+          <View style={styles.position}>
+            <IconButton
+              icon="thumbs-up"
+              color={isCliked ? Colors.primary500 : Colors.primary100}
+              size={36}
+              onPress={likeHandler}
+            />
+            <Text>{like} likes</Text>
+          </View>
         </View>
-      </View>
+      </LinearGradient>
     </Pressable>
   );
 }
@@ -53,11 +60,12 @@ export default PlaceItem;
 const styles = StyleSheet.create({
   item: {
     flexDirection: "column",
+    flex: 1,
     // alignItems: "center",
     // justifyContent: "center",
     borderRadius: 6,
     marginVertical: 12,
-    // backgroundColor: Colors.primary1000,
+    backgroundColor: Colors.primary1000,
     elevation: 5,
     shadowColor: Colors.primary500,
     shadowOpacity: 0.15,
@@ -79,7 +87,6 @@ const styles = StyleSheet.create({
     padding: 12,
     height: 150,
     backgroundColor: Colors.primary1000,
-    // opacity: 0.5,
   },
   title: {
     fontWeight: "bold",

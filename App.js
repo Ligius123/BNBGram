@@ -16,6 +16,7 @@ import FavoritesContextProvider from "./store/favorites-context";
 import FavoritePlaces from "./screens/FavoritePlaces";
 import HowMany from "./screens/HowMany";
 import PlacesNumberContextProvider from "./store/numberPlaces-context";
+import UserContextProvider from "./store/user-context";
 
 const Stack = createNativeStackNavigator();
 
@@ -47,7 +48,17 @@ function AuthenticatedStack() {
       <Stack.Screen
         name="HowMany"
         component={HowMany}
-        options={{ title: "Welcome to BNBGram..." }}
+        options={{
+          title: "Welcome to BNBGram...",
+          headerRight: ({ tintColor }) => (
+            <IconButton
+              icon="exit"
+              color={tintColor}
+              size={24}
+              onPress={authCtx.logout}
+            />
+          ),
+        }}
       />
 
       <Stack.Screen
@@ -111,9 +122,13 @@ export default function App() {
     <>
       <StatusBar style="light" />
       <AuthContextProvider>
-        <PlacesNumberContextProvider>
-          <Navigation />
-        </PlacesNumberContextProvider>
+        <FavoritesContextProvider>
+          <PlacesNumberContextProvider>
+            <UserContextProvider>
+              <Navigation />
+            </UserContextProvider>
+          </PlacesNumberContextProvider>
+        </FavoritesContextProvider>
       </AuthContextProvider>
     </>
   );

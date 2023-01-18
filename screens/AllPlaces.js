@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useIsFocused } from "@react-navigation/native";
 
 import PlacesList from "../components/Places/PlacesList";
@@ -6,6 +6,7 @@ import BackgroundImage from "../components/ui/BackgroundImage";
 import { fetchPlace } from "../util/http";
 import LoadingOverlay from "../components/ui/LoadingOverlay";
 import ErrorOverlay from "../components/ui/ErrorOverlay";
+import { FavoritesContext } from "../store/favorites-context";
 
 function AllPlaces({ route }) {
   const [isFetching, setIsFetching] = useState(false);
@@ -13,6 +14,12 @@ function AllPlaces({ route }) {
   const [loadedPlaces, setLoadedPlaces] = useState([]);
 
   const isFocused = useIsFocused();
+
+  const favoritePlaceCtx = useContext(FavoritesContext);
+
+  useEffect(() => {
+    favoritePlaceCtx.storeIds(loadedPlaces);
+  }, [loadedPlaces]);
 
   useEffect(() => {
     async function loadPlaces() {
