@@ -11,7 +11,6 @@ import { useState, useContext } from "react";
 import { Colors } from "../../constants/styles";
 import IconButton from "../ui/IconButton";
 import { UserContext } from "../../store/user-context";
-import { LinearGradient } from "expo-linear-gradient";
 
 function PlaceItem({ place, onSelect }) {
   const [like, setLike] = useState(0);
@@ -29,28 +28,26 @@ function PlaceItem({ place, onSelect }) {
       style={({ pressed }) => [styles.item, pressed && styles.pressed]}
       onPress={onSelect.bind(this, place.id)}
     >
-      <LinearGradient colors={[Colors.primary1100, Colors.primary1200]}>
-        <Text>{UserCtx.email}</Text>
-        <Image style={styles.image} source={{ uri: place.imageUriC }} />
-        {/* <Image style={styles.image} source={{ uri: place.imageUriG }} /> */}
+      <Text>{UserCtx.email}</Text>
+      <Image style={styles.image} source={{ uri: place.imageUriC }} />
+      {/* <Image style={styles.image} source={{ uri: place.imageUriG }} /> */}
 
-        <View style={styles.info}>
-          <Text style={styles.title}>{place.title}</Text>
-          <Text style={styles.address}>{place.address}</Text>
-          <ScrollView>
-            <Text style={styles.description}>"{place.description}"</Text>
-          </ScrollView>
-          <View style={styles.position}>
-            <IconButton
-              icon="thumbs-up"
-              color={isCliked ? Colors.primary500 : Colors.primary100}
-              size={36}
-              onPress={likeHandler}
-            />
-            <Text>{like} likes</Text>
-          </View>
+      <View style={styles.info}>
+        <Text style={styles.title}>{place.title}</Text>
+        <Text style={styles.address}>{place.address}</Text>
+        <ScrollView>
+          <Text style={styles.description}>"{place.description}"</Text>
+        </ScrollView>
+        <View style={styles.position}>
+          <IconButton
+            icon="thumbs-up"
+            color={isCliked ? Colors.primary500 : Colors.primary100}
+            size={36}
+            onPress={likeHandler}
+          />
+          <Text>{like} likes</Text>
         </View>
-      </LinearGradient>
+      </View>
     </Pressable>
   );
 }
@@ -78,8 +75,7 @@ const styles = StyleSheet.create({
   },
   image: {
     flex: 1,
-    borderBottomLeftRadius: 4,
-    borderTopLeftRadius: 4,
+    borderRadius: 4,
     height: 180,
   },
   info: {

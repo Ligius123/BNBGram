@@ -1,17 +1,24 @@
 import { View, Text } from "react-native";
-import { useContext } from "react";
+import { useContext, useState, useEffect } from "react";
 import { StyleSheet } from "react-native";
 
 import BackgroundImage from "../components/ui/BackgroundImage";
 import { PlacesNumberContext } from "../store/numberPlaces-context";
 import { Colors } from "../constants/styles";
 import Button from "../components/ui/Button";
+
 function HowMany({ navigation }) {
-  numberPlaces = useContext(PlacesNumberContext);
+  const numberPlacesCtx = useContext(PlacesNumberContext);
+
+  const [placesNumber, setPlacesNumber] = useState(0);
+
+  useEffect(() => {
+    setPlacesNumber(numberPlacesCtx.numberOfPlaces);
+  }, [numberPlacesCtx.numberOfPlaces]);
 
   function seePlacesHandler() {
     navigation.navigate("AllPlaces", {
-      numberOfPlaces: numberPlaces.numberOfPlaces,
+      numberOfPlaces: placesNumber,
     });
   }
 
@@ -20,7 +27,7 @@ function HowMany({ navigation }) {
       <View style={styles.viewPort}>
         <View style={styles.box}>
           <Text style={styles.text}>
-            You have {numberPlaces.numberOfPlaces} places to view !
+            You have {placesNumber} places to view !
           </Text>
 
           <Button onPress={seePlacesHandler}>View Places</Button>

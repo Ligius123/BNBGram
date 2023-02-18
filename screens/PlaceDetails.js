@@ -31,7 +31,6 @@ function PlaceDetails({ route, navigation }) {
   const placeIsFavorite = favoritePlaces.ids.includes(selectedPlaceId);
 
   async function changeFavoriteStatusHandler() {
-    console.log("pressed!");
     if (placeIsFavorite) {
       favoritePlaces.removeFavorite(selectedPlaceId);
     } else {

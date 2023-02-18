@@ -1,7 +1,13 @@
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+  useWindowDimensions,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { useContext } from "react";
-import { useEffect } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
+import { Icon } from "react-native-elements";
 
 import { PlacesNumberContext } from "../../store/numberPlaces-context";
 import { Colors } from "../../constants/styles";
@@ -9,10 +15,17 @@ import PlaceItem from "./PlaceItem";
 
 function PlacesList({ places }) {
   const navigation = useNavigation();
-  const numberOfPlaces = useContext(PlacesNumberContext);
+  const numberOfPlacesCtx = useContext(PlacesNumberContext);
+  const listRef = useRef(null);
+  const [contentVerticalOffset, setContentVerticalOffset] = useState(0);
+
+  const { height } = useWindowDimensions();
+
+  const CONTENT_OFFSET_THRESHOLD = 1000;
+  const CONTENT_INSET_THRESHOLD = 0;
 
   useEffect(() => {
-    numberOfPlaces.getNumberOfPlaces(places.length);
+    numberOfPlacesCtx.getNumberOfPlaces(places.length);
   }, [places.length]);
 
   function selectPlaceHandler(id) {
@@ -32,15 +45,45 @@ function PlacesList({ places }) {
   return (
     <View style={styles.alignment}>
       <Text style={styles.number}>
-        {numberOfPlaces.numberOfPlaces} places to view!
+        {numberOfPlacesCtx.numberOfPlaces} places to view! height: {height}
       </Text>
       <FlatList
         data={places}
         keyExtractor={(item) => item.id}
+        ref={listRef}
+        onScroll={(event) => {
+          setContentVerticalOffset(event.nativeEvent.contentOffset.y);
+        }}
         renderItem={({ item }) => (
           <PlaceItem place={item} onSelect={selectPlaceHandler} />
         )}
       />
+      {contentVerticalOffset < height / 2  && (
+        <Icon
+          name="south"
+          type="material"
+          color="teal"
+          raised
+          reverse
+          containerStyle={styles.scrollTopButton}
+          onPress={() => {
+            listRef.current.scrollToEnd({ offset: 0, animated: true });
+          }}
+        />
+      )}
+      {contentVerticalOffset >= height / 2 && (
+        <Icon
+          name="north"
+          type="material"
+          color="teal"
+          raised
+          reverse
+          containerStyle={styles.scrollTopButton}
+          onPress={() => {
+            listRef.current.scrollToOffset({ offset: 0, animated: true });
+          }}
+        />
+      )}
     </View>
   );
 }
@@ -61,12 +104,7 @@ const styles = StyleSheet.create({
     color: Colors.primary200,
   },
   alignment: {
-    // flex: 1,
-    // flexDirection: "column",
-    // alignItems: "center",
-    // justifyContent: "center",
-    // marginLeft: "5%",
-    // marginRight: "5%",
+    marginBottom: 45,
   },
   number: {
     marginTop: 4,
@@ -80,5 +118,10 @@ const styles = StyleSheet.create({
     width: "50%",
     elevation: 10,
     opacity: 0.5,
+  },
+  scrollTopButton: {
+    position: "absolute",
+    bottom: 30,
+    right: 0,
   },
 });
