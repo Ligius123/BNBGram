@@ -1,7 +1,8 @@
 import { useEffect, useState, useLayoutEffect } from "react";
-import { ScrollView, Image, View, Text, StyleSheet } from "react-native";
+import { ScrollView, Image, View, Text, Modal, StyleSheet } from "react-native";
 import { useContext } from "react";
 import { FavoritesContext } from "../store/favorites-context";
+import { LinearGradient } from "expo-linear-gradient";
 
 import OutlinedButton from "../components/ui/OutlinedButton";
 import { Colors } from "../constants/styles";
@@ -10,13 +11,14 @@ import LoadingOverlay from "../components/ui/LoadingOverlay";
 import ErrorOverlay from "../components/ui/ErrorOverlay";
 import IconButton from "../components/ui/IconButton";
 import FavoriteButton from "../components/ui/FavoriteButton";
-import { LinearGradient } from "expo-linear-gradient";
+import BackgroundImage from "../components/ui/BackgroundImage";
 
 function PlaceDetails({ route, navigation }) {
   const [isFetching, setIsFetching] = useState(true);
   const [error, setError] = useState();
   const [fetchedPlace, setFetchedPlace] = useState();
   const [isDeleting, setIsDeleting] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
 
   function showOnMapHandler() {
     navigation.navigate("Map", {
@@ -83,13 +85,17 @@ function PlaceDetails({ route, navigation }) {
     return <LoadingOverlay message="View place details..." />;
   }
 
+  function acceptDeleteHandler() {
+    setModalVisible(true);
+  }
+
   async function deletePlaceHandler() {
     setIsDeleting(true);
     try {
       await deletePlace(selectedPlaceId);
       navigation.goBack();
     } catch (error) {
-      setError("Could not delete place!" + selectedPlaceId.id);
+      setError("Could not delete place!" + selectedPlaceId.title);
     }
     setIsDeleting(false);
   }
@@ -100,6 +106,43 @@ function PlaceDetails({ route, navigation }) {
 
   if (isDeleting) {
     return <LoadingOverlay message="Deleting place..." />;
+  }
+
+  if (modalVisible) {
+    return (
+      // <LinearGradient colors={[Colors.primary1100, Colors.primary1200]}>
+      <BackgroundImage>
+        <View style={styles.centeredView}>
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => {
+              Alert.alert("Modal has been closed.");
+              setModalVisible(!modalVisible);
+            }}
+          >
+            <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                <Text style={styles.modalText}>
+                  Are you sure you want to delete this item?
+                </Text>
+                <View style={styles.modalButtons}>
+                  <OutlinedButton onPress={deletePlaceHandler}>
+                    <Text style={styles.textStyle}>Delete</Text>
+                  </OutlinedButton>
+                  <OutlinedButton
+                    onPress={() => setModalVisible(!modalVisible)}
+                  >
+                    <Text style={styles.textStyle}>No</Text>
+                  </OutlinedButton>
+                </View>
+              </View>
+            </View>
+          </Modal>
+        </View>
+      </BackgroundImage>
+    );
   }
 
   return (
@@ -122,7 +165,7 @@ function PlaceDetails({ route, navigation }) {
               icon="trash"
               color={"black"}
               size={36}
-              onPress={deletePlaceHandler}
+              onPress={acceptDeleteHandler}
             />
           </View>
         </View>
@@ -148,7 +191,6 @@ const styles = StyleSheet.create({
   locationContainer: {
     justifyContent: "center",
     alignItems: "center",
-    // height: "100%",
   },
   addressContainer: {
     padding: 20,
@@ -183,5 +225,40 @@ const styles = StyleSheet.create({
     borderTopColor: "whites",
     alignItems: "center",
     marginBottom: 32,
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
+  },
+  modalButtons: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
 });
