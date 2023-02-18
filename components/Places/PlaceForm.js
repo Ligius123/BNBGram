@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState, useContext } from "react";
 import { ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 
 import { Colors } from "../../constants/styles";
@@ -7,6 +7,7 @@ import ImagePicker from "./ImagePicker";
 import Camera from "./Camera";
 import LocationPicker from "./LocationPicker";
 import { Place } from "../../models/place";
+import { FavoritesContext } from "../../store/favorites-context";
 
 function PlaceForm({ onCreatePlace }) {
   const [enteredTitle, setEnteredTitle] = useState("");

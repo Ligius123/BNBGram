@@ -5,15 +5,15 @@ export const FavoritesContext = createContext({
   allIds: [],
   addFavorite: (id) => {},
   removeFavorite: (id) => {},
-  storeIds: (ids) => {},
+  storeIds: (allIds) => {},
 });
 
 function FavoritesContextProvider({ children }) {
   const [favoritePlaceIds, setFavoritePlaceIds] = useState([]);
-  const [ids, setIds] = useState([]);
+  const [allIds, setAllIds] = useState([]);
 
-  function storeIds(ids) {
-    setIds((currentIds) => [...currentIds, ids]);
+  function storeIds(allIds) {
+    setAllIds((currentIds) => [...currentIds, allIds]);
   }
 
   function addFavorite(id) {
@@ -28,7 +28,7 @@ function FavoritesContextProvider({ children }) {
 
   const value = {
     ids: favoritePlaceIds,
-    allIds: ids,
+    allIds: allIds,
     addFavorite: addFavorite,
     removeFavorite: removeFavorite,
     storeIds: storeIds,

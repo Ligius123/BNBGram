@@ -6,7 +6,7 @@ import BackgroundImage from "../components/ui/BackgroundImage";
 import { fetchPlace } from "../util/http";
 import LoadingOverlay from "../components/ui/LoadingOverlay";
 import ErrorOverlay from "../components/ui/ErrorOverlay";
-import { FavoritesContext } from "../store/favorites-context";
+// import { FavoritesContext } from "../store/favorites-context";
 
 function AllPlaces({ route }) {
   const [isFetching, setIsFetching] = useState(false);
@@ -15,17 +15,19 @@ function AllPlaces({ route }) {
 
   const isFocused = useIsFocused();
 
-  const favoritePlaceCtx = useContext(FavoritesContext);
+  // const favoritePlaceCtx = useContext(FavoritesContext);
 
-  useEffect(() => {
-    favoritePlaceCtx.storeIds(loadedPlaces);
-  }, [loadedPlaces]);
+  // useEffect(() => {
+  //   favoritePlaceCtx.storeIds(loadedPlaces);
+  //   console.log("Id stored");
+  // }, [loadedPlaces]);
 
   useEffect(() => {
     async function loadPlaces() {
       setIsFetching(true);
       try {
         const places = await fetchPlace();
+        // favoritePlaceCtx.storeIds(selectedPlaceId);
         setLoadedPlaces(places);
       } catch (error) {
         setError("Could not fetch places!");

@@ -21,7 +21,6 @@ export async function fetchPlaceDetails(id) {
     title: response.data.title,
   };
 
-  console.log(place);
   return place;
 }
 
@@ -29,7 +28,6 @@ export async function fetchPlace() {
   const response = await axios.get(BACKEND_URL + "/place.json");
 
   const places = [];
-  // console.log("S or randuit in All Places Screen");
 
   for (const key in response.data) {
     const placeObj = {
@@ -43,15 +41,36 @@ export async function fetchPlace() {
     };
     places.push(placeObj);
   }
-  // console.log(places);
   return places;
+}
+
+export async function numberOfPlaces() {
+  let count = 0;
+  const response = await axios.get(BACKEND_URL + "/place.json");
+
+  const places = [];
+  for (const key in response.data) {
+    const placeObj = {
+      id: key,
+      address: response.data[key].address,
+      description: response.data[key].description,
+      location: response.data[key].location,
+      imageUriC: response.data[key].imageUriC,
+      imageUriG: response.data[key].imageUriG,
+      title: response.data[key].title,
+    };
+    places.push(placeObj);
+    count++;
+  }
+  console.log(count);
+
+  return count;
 }
 
 export async function fetchFavoritePlace(ids) {
   const response = await axios.get(BACKEND_URL + "/place.json");
 
   const places = [];
-  // console.log("S or randuit in All Places Screen");
 
   for (const key in response.data) {
     const placeObj = {
@@ -65,7 +84,6 @@ export async function fetchFavoritePlace(ids) {
     };
     places.push(placeObj);
   }
-  // console.log(places);
   return places;
 }
 
