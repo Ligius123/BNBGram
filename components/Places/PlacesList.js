@@ -21,9 +21,6 @@ function PlacesList({ places }) {
 
   const { height } = useWindowDimensions();
 
-  const CONTENT_OFFSET_THRESHOLD = 1000;
-  const CONTENT_INSET_THRESHOLD = 0;
-
   useEffect(() => {
     numberOfPlacesCtx.getNumberOfPlaces(places.length);
   }, [places.length]);
@@ -45,7 +42,7 @@ function PlacesList({ places }) {
   return (
     <View style={styles.alignment}>
       <Text style={styles.number}>
-        {numberOfPlacesCtx.numberOfPlaces} places to view! height: {height}
+        {numberOfPlacesCtx.numberOfPlaces} places to view!
       </Text>
       <FlatList
         data={places}
@@ -58,7 +55,7 @@ function PlacesList({ places }) {
           <PlaceItem place={item} onSelect={selectPlaceHandler} />
         )}
       />
-      {contentVerticalOffset < height / 2  && (
+      {contentVerticalOffset < height / 2 && contentVerticalOffset > 0 && (
         <Icon
           name="south"
           type="material"
@@ -72,18 +69,18 @@ function PlacesList({ places }) {
         />
       )}
       {contentVerticalOffset >= height / 2 && (
-        <Icon
-          name="north"
-          type="material"
-          color="teal"
-          raised
-          reverse
-          containerStyle={styles.scrollTopButton}
-          onPress={() => {
-            listRef.current.scrollToOffset({ offset: 0, animated: true });
-          }}
-        />
-      )}
+          <Icon
+            name="north"
+            type="material"
+            color="teal"
+            raised
+            reverse
+            containerStyle={styles.scrollTopButton}
+            onPress={() => {
+              listRef.current.scrollToOffset({ offset: 0, animated: true });
+            }}
+          />
+        )}
     </View>
   );
 }

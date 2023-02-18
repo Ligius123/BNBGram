@@ -50,9 +50,10 @@ export default function ImagePickerComp() {
   return (
     <View>
       <View style={styles.imagePreview}>{imagePreview}</View>
-      <OutlinedButton onPress={pickImage}>
-        Pick an image from camera roll
-      </OutlinedButton>
+
+        <OutlinedButton onPress={pickImage}>
+          Pick an image from camera roll
+        </OutlinedButton>
     </View>
   );
 }
