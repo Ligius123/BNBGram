@@ -17,4 +17,4 @@ export const Colors = {
   error200: "#ff0000",
   error500: "#f37c13",
 };
-// #4e0329
+
