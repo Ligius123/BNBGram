@@ -1,7 +1,9 @@
 import { useContext } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { StatusBar } from "expo-status-bar";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 
 import LoginScreen from "./screens/LoginScreen";
 import SignupScreen from "./screens/SignupScreen";
@@ -9,16 +11,18 @@ import AddPlace from "./screens/AddPlace";
 import AllPlaces from "./screens/AllPlaces";
 import Map from "./screens/Map";
 import PlaceDetails from "./screens/PlaceDetails";
+import HowMany from "./screens/HowMany";
+import MyPlaces from "./screens/MyPlaces";
 import IconButton from "./components/ui/IconButton";
 import { Colors } from "./constants/styles";
 import AuthContextProvider, { AuthContext } from "./store/auth-context";
 import FavoritesContextProvider from "./store/favorites-context";
 import FavoritePlaces from "./screens/FavoritePlaces";
-import HowMany from "./screens/HowMany";
 import PlacesNumberContextProvider from "./store/numberPlaces-context";
 import UserContextProvider from "./store/user-context";
 
 const Stack = createNativeStackNavigator();
+const BottomTab = createBottomTabNavigator();
 
 function AuthStack() {
   return (
@@ -35,74 +39,94 @@ function AuthStack() {
   );
 }
 
-function AuthenticatedStack() {
+function StackScreens() {
   const authCtx = useContext(AuthContext);
   return (
     <Stack.Navigator
       screenOptions={{
-        headerStyle: { backgroundColor: Colors.primary500 },
-        headerTintColor: "white",
         contentStyle: { backgroundColor: Colors.primary100 },
+        headerShown: false,
       }}
     >
-      <Stack.Screen
-        name="HowMany"
-        component={HowMany}
-        options={{
-          title: "Welcome to BNBGram...",
-          headerRight: ({ tintColor }) => (
-            <IconButton
-              icon="exit"
-              color={tintColor}
-              size={24}
-              onPress={authCtx.logout}
-            />
-          ),
-        }}
-      />
-
-      <Stack.Screen
-        name="AllPlaces"
-        component={AllPlaces}
-        options={({ navigation }) => ({
-          title: "Your Favorite Places",
-          headerRight: ({ tintColor }) => (
-            <IconButton
-              icon="add"
-              size={24}
-              color={tintColor}
-              onPress={() => navigation.navigate("AddPlace")}
-            />
-          ),
-        })}
-      />
-      <Stack.Screen
-        name="AddPlace"
-        component={AddPlace}
-        options={{
-          title: "Add a new Place",
-          headerRight: ({ tintColor }) => (
-            <IconButton
-              icon="exit"
-              color={tintColor}
-              size={24}
-              onPress={authCtx.logout}
-            />
-          ),
-        }}
-      />
+      <Stack.Screen name="HowMany" component={HowMany} />
       <Stack.Screen name="Map" component={Map} />
       <Stack.Screen
         name="PlaceDetails"
         component={PlaceDetails}
-        options={{ title: "Loading Place..." }}
-      />
-      <Stack.Screen
-        name="FavoritePlaces"
-        component={FavoritePlaces}
-        options={{ title: "Loading Favorite Places..." }}
+        options={{
+          title: "Loading Place...",
+        }}
       />
     </Stack.Navigator>
+  );
+}
+
+function AuthenticatedStack() {
+  const authCtx = useContext(AuthContext);
+
+  return (
+    <BottomTab.Navigator
+      screenOptions={{
+        headerStyle: { backgroundColor: Colors.primary500 },
+        tabBarStyle: { backgroundColor: Colors.primary500 },
+        tabBarInactiveTintColor: Colors.primary100,
+        tabBarActiveTintColor: Colors.primary300,
+        headerRight: () => (
+          <IconButton
+            icon="exit"
+            color={Colors.primary300}
+            size={24}
+            onPress={authCtx.logout}
+          />
+        ),
+      }}
+    >
+      <BottomTab.Screen
+        name="BNBGram"
+        component={StackScreens}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="home" color={color} size={size} />
+          ),
+        }}
+      />
+      <BottomTab.Screen
+        name="AllPlaces"
+        component={AllPlaces}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="newspaper" color={color} size={size} />
+          ),
+        }}
+      />
+      <BottomTab.Screen
+        name="AddPlace"
+        component={AddPlace}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="add-circle" color={color} size={size} />
+          ),
+        }}
+      />
+      <BottomTab.Screen
+        name="Favorites"
+        component={FavoritePlaces}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="star" color={color} size={size} />
+          ),
+        }}
+      />
+      <BottomTab.Screen
+        name="MyPlaces"
+        component={MyPlaces}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="account" color={color} size={size} />
+          ),
+        }}
+      />
+    </BottomTab.Navigator>
   );
 }
 
