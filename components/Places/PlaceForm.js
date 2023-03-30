@@ -7,7 +7,8 @@ import ImagePicker from "./ImagePicker";
 import Camera from "./Camera";
 import LocationPicker from "./LocationPicker";
 import { Place } from "../../models/place";
-import { FavoritesContext } from "../../store/favorites-context";
+import { UserContext } from "../../store/user-context";
+
 
 function PlaceForm({ onCreatePlace }) {
   const [enteredTitle, setEnteredTitle] = useState("");
@@ -15,6 +16,8 @@ function PlaceForm({ onCreatePlace }) {
   const [selectedImageC, setSelectedImageC] = useState();
   const [selectedImageG, setSelectedImageG] = useState();
   const [pickedLocation, setPickedLocation] = useState();
+
+  const userCtx = useContext(UserContext);
 
   function changeTitleHandler(enteredText) {
     setEnteredTitle(enteredText);
@@ -42,7 +45,8 @@ function PlaceForm({ onCreatePlace }) {
       enteredText,
       selectedImageC,
       selectedImageG,
-      pickedLocation
+      pickedLocation,
+      userCtx.email
     );
     onCreatePlace(placeData);
   }

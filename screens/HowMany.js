@@ -1,24 +1,34 @@
 import { View, Text } from "react-native";
-import { useContext, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { StyleSheet } from "react-native";
 
 import BackgroundImage from "../components/ui/BackgroundImage";
-import { PlacesNumberContext } from "../store/numberPlaces-context";
 import { Colors } from "../constants/styles";
 import Button from "../components/ui/Button";
+import { numberOfPlaces } from "../util/http";
+import { useIsFocused } from "@react-navigation/native";
 
-function HowMany({ navigation }) {
-  const numberPlacesCtx = useContext(PlacesNumberContext);
+function HowMany({ navigation, route }) {
 
   const [placesNumber, setPlacesNumber] = useState(0);
 
+  const isFocused = useIsFocused();
+
   useEffect(() => {
-    setPlacesNumber(numberPlacesCtx.numberOfPlaces);
-  }, [numberPlacesCtx.numberOfPlaces]);
+    async function getNumberOfPlaces() {
+      try {
+        const nrPlaces = await numberOfPlaces();
+        setPlacesNumber(nrPlaces);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getNumberOfPlaces();
+  }, [route, isFocused]);
 
   function seePlacesHandler() {
     navigation.navigate("AllPlaces", {
-      numberOfPlaces: placesNumber,
+      numberPlaces: placesNumber,
     });
   }
 

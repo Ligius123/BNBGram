@@ -6,24 +6,20 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Icon } from "react-native-elements";
 
-import { PlacesNumberContext } from "../../store/numberPlaces-context";
 import { Colors } from "../../constants/styles";
 import PlaceItem from "./PlaceItem";
 
 function PlacesList({ places }) {
   const navigation = useNavigation();
-  const numberOfPlacesCtx = useContext(PlacesNumberContext);
+  
   const listRef = useRef(null);
+
   const [contentVerticalOffset, setContentVerticalOffset] = useState(0);
 
   const { height } = useWindowDimensions();
-
-  useEffect(() => {
-    numberOfPlacesCtx.getNumberOfPlaces(places.length);
-  }, [places.length]);
 
   function selectPlaceHandler(id) {
     navigation.navigate("PlaceDetails", { placeId: id });
@@ -42,7 +38,7 @@ function PlacesList({ places }) {
   return (
     <View style={styles.alignment}>
       <Text style={styles.number}>
-        {numberOfPlacesCtx.numberOfPlaces} places to view!
+        {places.length} places to view!
       </Text>
       <FlatList
         data={places}

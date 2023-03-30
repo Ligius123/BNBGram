@@ -3,6 +3,7 @@ import {
   launchCameraAsync,
   useCameraPermissions,
   PermissionStatus,
+  PermissionsAndroid,
 } from "expo-image-picker";
 import { useState } from "react";
 
@@ -15,26 +16,53 @@ function Camera({ onTakeImage }) {
   const [cameraPermissionInformation, requestPermission] =
     useCameraPermissions();
 
-  async function verifyPermissions() {
-    if (cameraPermissionInformation.status === PermissionStatus.UNDETERMINED) {
-      const permissionResponse = await requestPermission();
+  // async function verifyPermissions() {
+  //   if (cameraPermissionInformation.status === PermissionStatus.UNDETERMINED) {
+  //     const permissionResponse = await requestPermission();
 
-      return permissionResponse.granted;
-    }
+  //     return permissionResponse.granted;
+  //   }
 
-    if (cameraPermissionInformation.status === PermissionStatus.DENIED) {
-      Alert.alert(
-        "Insufficient Permissions!",
-        "You need to grant camera permissions to use this app."
+  //   if (cameraPermissionInformation.status === PermissionStatus.DENIED) {
+  //     Alert.alert(
+  //       "Insufficient Permissions!",
+  //       "You need to grant camera permissions to use this app."
+  //     );
+  //     return false;
+  //   }
+
+  //   return true;
+  // }
+
+  const requestCameraPermission = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        {
+          title: 'Cool Photo App Camera Permission',
+          message:
+            'Cool Photo App needs access to your camera ' +
+            'so you can take awesome pictures.',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
       );
-      return false;
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('You can use the camera');
+        return true;
+      } else {
+        console.log('Camera permission denied');
+        return false;
+      }
+    } catch (err) {
+      console.warn(err);
     }
-
     return true;
-  }
+  };
 
   async function takeImageHandler() {
-    const hasPermission = await verifyPermissions();
+    const hasPermission = await requestCameraPermission();
 
     if (!hasPermission) {
       return;
