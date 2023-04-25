@@ -14,8 +14,6 @@ import PlaceItem from "./PlaceItem";
 import FlatButton from "../ui/FlatButton";
 
 function PlacesList({ places }) {
-
-
   const navigation = useNavigation();
 
   const listRef = useRef(null);
@@ -37,6 +35,9 @@ function PlacesList({ places }) {
   if (!places || places.length === 0) {
     return (
       <View style={styles.fallbackContainer}>
+        <FlatButton style={styles.forumButton} onPress={goToForumHandler}>
+          Forum
+        </FlatButton>
         <Text style={styles.fallbackText}>
           No places added yet - start adding some!
         </Text>
@@ -46,9 +47,9 @@ function PlacesList({ places }) {
 
   return (
     <View style={styles.alignment}>
-      {/* <FlatButton style={styles.forumButton} onPress={goToForumHandler}>
+      <FlatButton style={styles.forumButton} onPress={goToForumHandler}>
         Forum
-      </FlatButton> */}
+      </FlatButton>
       <FlatList
         data={places}
         keyExtractor={(item) => item.id}

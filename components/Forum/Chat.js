@@ -1,21 +1,25 @@
-import { StyleSheet, View, Text, TextInput } from "react-native";
-import { useState } from "react";
+import { StyleSheet, View, TextInput } from "react-native";
+import { useContext, useState } from "react";
 
 import { Colors } from "../../constants/styles";
 import Button from "../ui/Button";
 
-function Chat() {
+import { Message } from "../../models/message";
+import { UserContext } from "../../store/user-context";
+
+function Chat({ onCreateMessage }) {
   const [enteredText, setEnteredText] = useState("");
-  const [showText, setShowText] = useState(false);
+
+  const userCtx = useContext(UserContext);
 
   function enteredTextHandler(enteredText) {
     setEnteredText(enteredText);
-    setShowText(false);
   }
 
   function showTextHandler() {
-    setShowText(true);
-    // setEnteredText("");
+    const message = new Message(enteredText, userCtx.email);
+    onCreateMessage(message);
+    setEnteredText("");
   }
 
   return (
@@ -26,7 +30,6 @@ function Chat() {
         value={enteredText}
       />
       <Button onPress={showTextHandler}>Send</Button>
-      <Text style={styles.text}>{showText && enteredText}</Text>
     </View>
   );
 }

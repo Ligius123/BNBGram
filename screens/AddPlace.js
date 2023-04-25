@@ -17,6 +17,7 @@ function AddPlace({ navigation }) {
         place: place,
       });
     } catch (error) {
+      console.log(error);
       setError("Could not post a place!");
       Alert.alert("Not enough arguments", "You have to fill al the fields");
     }

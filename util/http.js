@@ -8,10 +8,32 @@ export async function storePlace(place) {
   return id;
 }
 
+export async function storeMessage(message) {
+  const response = await axios.post(BACKEND_URL + "/message.json", message);
+  const id = response.data.name;
+  return id;
+}
+
 export async function storeLike(like) {
   const response = await axios.post(BACKEND_URL + "/place.json", like);
   const id = response.data.name;
   return id;
+}
+
+export async function fetchMessage() {
+  const response = await axios.get(BACKEND_URL + "/message.json");
+
+  const message = [];
+
+  for (const key in response.data) {
+    const messageObj = {
+      id: key,
+      message: response.data[key].message,
+      user: response.data[key].user,
+    };
+    message.push(messageObj);
+  }
+  return message;
 }
 
 export async function fetchPlaceDetails(id) {
