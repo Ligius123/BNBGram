@@ -11,10 +11,13 @@ import { Icon } from "react-native-elements";
 
 import { Colors } from "../../constants/styles";
 import PlaceItem from "./PlaceItem";
+import FlatButton from "../ui/FlatButton";
 
 function PlacesList({ places }) {
+
+
   const navigation = useNavigation();
-  
+
   const listRef = useRef(null);
 
   const [contentVerticalOffset, setContentVerticalOffset] = useState(0);
@@ -23,6 +26,12 @@ function PlacesList({ places }) {
 
   function selectPlaceHandler(id) {
     navigation.navigate("PlaceDetails", { placeId: id });
+  }
+
+  function goToForumHandler() {
+    navigation.navigate("Forum", {
+      numberPlaces: places.length,
+    });
   }
 
   if (!places || places.length === 0) {
@@ -37,9 +46,9 @@ function PlacesList({ places }) {
 
   return (
     <View style={styles.alignment}>
-      <Text style={styles.number}>
-        {places.length} places to view!
-      </Text>
+      {/* <FlatButton style={styles.forumButton} onPress={goToForumHandler}>
+        Forum
+      </FlatButton> */}
       <FlatList
         data={places}
         keyExtractor={(item) => item.id}
@@ -65,18 +74,18 @@ function PlacesList({ places }) {
         />
       )}
       {contentVerticalOffset >= height / 2 && (
-          <Icon
-            name="north"
-            type="material"
-            color="teal"
-            raised
-            reverse
-            containerStyle={styles.scrollTopButton}
-            onPress={() => {
-              listRef.current.scrollToOffset({ offset: 0, animated: true });
-            }}
-          />
-        )}
+        <Icon
+          name="north"
+          type="material"
+          color="teal"
+          raised
+          reverse
+          containerStyle={styles.scrollTopButton}
+          onPress={() => {
+            listRef.current.scrollToOffset({ offset: 0, animated: true });
+          }}
+        />
+      )}
     </View>
   );
 }
@@ -116,5 +125,8 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 30,
     right: 0,
+  },
+  forumButton: {
+    marginBottom: 4,
   },
 });

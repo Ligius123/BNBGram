@@ -9,7 +9,6 @@ import LocationPicker from "./LocationPicker";
 import { Place } from "../../models/place";
 import { UserContext } from "../../store/user-context";
 
-
 function PlaceForm({ onCreatePlace }) {
   const [enteredTitle, setEnteredTitle] = useState("");
   const [enteredText, setEnteredText] = useState("");
@@ -18,6 +17,8 @@ function PlaceForm({ onCreatePlace }) {
   const [pickedLocation, setPickedLocation] = useState();
 
   const userCtx = useContext(UserContext);
+
+  const currentDate = new Date();
 
   function changeTitleHandler(enteredText) {
     setEnteredTitle(enteredText);
@@ -46,6 +47,8 @@ function PlaceForm({ onCreatePlace }) {
       selectedImageC,
       selectedImageG,
       pickedLocation,
+      currentDate.toDateString(),
+      false,
       userCtx.email
     );
     onCreatePlace(placeData);

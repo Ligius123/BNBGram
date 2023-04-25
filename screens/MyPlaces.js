@@ -34,6 +34,8 @@ function MyPlaces({ route }) {
           imageUriC: response.data[key].imageUriC,
           imageUriG: response.data[key].imageUriG,
           title: response.data[key].title,
+          date: response.data[key].date,
+          favorite: response.data[key].favorite,
           user: response.data[key].user,
         };
         places.push(placeObj);
@@ -46,8 +48,8 @@ function MyPlaces({ route }) {
     async function loadPlaces() {
       setIsFetching(true);
       try {
-        const places = await fetchMyPlace();
-        setLoadedPlaces(places);
+        const myPlaces = await fetchMyPlace();
+        setLoadedPlaces(myPlaces);
       } catch (error) {
         setError("Could not fetch my places!");
       }

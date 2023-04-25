@@ -6,10 +6,11 @@ import {
   View,
   ScrollView,
 } from "react-native";
-import { useState } from "react";
+import { useState, useContext } from "react";
 
 import { Colors } from "../../constants/styles";
 import IconButton from "../ui/IconButton";
+import { UserContext } from "../../store/user-context";
 
 function PlaceItem({ place, onSelect }) {
   const [like, setLike] = useState(0);
@@ -20,12 +21,14 @@ function PlaceItem({ place, onSelect }) {
     setIsClicked(true);
   }
 
+  const UserCtx = useContext(UserContext);
+
   return (
     <Pressable
       style={({ pressed }) => [styles.item, pressed && styles.pressed]}
       onPress={onSelect.bind(this, place.id)}
     >
-      <Text>{place.user}</Text>
+      <Text>{UserCtx.email}</Text>
       <Image style={styles.image} source={{ uri: place.imageUriC }} />
       {/* <Image style={styles.image} source={{ uri: place.imageUriG }} /> */}
 

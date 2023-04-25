@@ -1,7 +1,5 @@
-import { useEffect, useState, useLayoutEffect } from "react";
+import { useEffect, useState, useLayoutEffect, useContext } from "react";
 import { ScrollView, Image, View, Text, Modal, StyleSheet } from "react-native";
-import { useContext } from "react";
-import { FavoritesContext } from "../store/favorites-context";
 import { LinearGradient } from "expo-linear-gradient";
 
 import OutlinedButton from "../components/ui/OutlinedButton";
@@ -12,6 +10,8 @@ import ErrorOverlay from "../components/ui/ErrorOverlay";
 import IconButton from "../components/ui/IconButton";
 import FavoriteButton from "../components/ui/FavoriteButton";
 import BackgroundImage from "../components/ui/BackgroundImage";
+import { updatePlace } from "../util/http";
+import { UserContext } from "../store/user-context";
 
 function PlaceDetails({ route, navigation }) {
   const [isFetching, setIsFetching] = useState(true);
@@ -19,6 +19,7 @@ function PlaceDetails({ route, navigation }) {
   const [fetchedPlace, setFetchedPlace] = useState();
   const [isDeleting, setIsDeleting] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [placeIsFavorite, setPlaceIsFavorite] = useState(false);
 
   function showOnMapHandler() {
     navigation.navigate("Map", {
@@ -27,20 +28,14 @@ function PlaceDetails({ route, navigation }) {
     });
   }
 
-  const favoritePlaces = useContext(FavoritesContext);
   const selectedPlaceId = route.params.placeId;
-
-  const placeIsFavorite = favoritePlaces.ids.includes(selectedPlaceId);
+  const userCtx = useContext(UserContext);
 
   async function changeFavoriteStatusHandler() {
-    if (placeIsFavorite) {
-      favoritePlaces.removeFavorite(selectedPlaceId);
-    } else {
-      favoritePlaces.addFavorite(selectedPlaceId);
+    if (!fetchedPlace.favorite) {
+      setPlaceIsFavorite(true);
+      await updatePlace(selectedPlaceId, fetchedPlace);
     }
-    navigation.navigate("FavoritePlaces", {
-      ids: favoritePlaces.ids,
-    });
   }
 
   useLayoutEffect(() => {
@@ -110,7 +105,6 @@ function PlaceDetails({ route, navigation }) {
 
   if (modalVisible) {
     return (
-      // <LinearGradient colors={[Colors.primary1100, Colors.primary1200]}>
       <BackgroundImage>
         <View style={styles.centeredView}>
           <Modal
@@ -160,13 +154,16 @@ function PlaceDetails({ route, navigation }) {
           <OutlinedButton icon="map" onPress={showOnMapHandler}>
             View on Map
           </OutlinedButton>
+
           <View style={styles.deleteContainer}>
-            <IconButton
-              icon="trash"
-              color={"black"}
-              size={36}
-              onPress={acceptDeleteHandler}
-            />
+            {userCtx.email === fetchedPlace.user && (
+              <IconButton
+                icon="trash"
+                color={"black"}
+                size={36}
+                onPress={acceptDeleteHandler}
+              />
+            )}
           </View>
         </View>
       </LinearGradient>

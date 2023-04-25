@@ -20,6 +20,7 @@ import FavoritesContextProvider from "./store/favorites-context";
 import FavoritePlaces from "./screens/FavoritePlaces";
 import PlacesNumberContextProvider from "./store/numberPlaces-context";
 import UserContextProvider from "./store/user-context";
+import Forum from "./screens/Forum";
 
 const Stack = createNativeStackNavigator();
 const BottomTab = createBottomTabNavigator();
@@ -46,17 +47,23 @@ function StackScreens() {
       screenOptions={{
         contentStyle: { backgroundColor: Colors.primary100 },
         headerShown: false,
+        headerStyle: { backgroundColor: Colors.primary500 },
       }}
     >
       <Stack.Screen name="HowMany" component={HowMany} />
-      <Stack.Screen name="Map" component={Map} />
+      <Stack.Screen name="Map" component={Map}  options={{
+          title: "Map",
+          headerShown: true,
+        }} />
       <Stack.Screen
         name="PlaceDetails"
         component={PlaceDetails}
         options={{
-          title: "Loading Place...",
+          // title: "Loading Place...",
+          headerShown: true,
         }}
       />
+      <Stack.Screen name="Forum" component={Forum} />
     </Stack.Navigator>
   );
 }
