@@ -1,17 +1,21 @@
 import { useEffect, useState, useLayoutEffect, useContext } from "react";
 import { ScrollView, Image, View, Text, Modal, StyleSheet } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import { UserContext } from "../store/user-context";
+import {
+  fetchPlaceDetails,
+  deletePlace,
+  storeFavoritePlaceId,
+} from "../util/http";
 
 import OutlinedButton from "../components/ui/OutlinedButton";
 import { Colors } from "../constants/styles";
-import { fetchPlaceDetails, deletePlace } from "../util/http";
 import LoadingOverlay from "../components/ui/LoadingOverlay";
 import ErrorOverlay from "../components/ui/ErrorOverlay";
 import IconButton from "../components/ui/IconButton";
 import FavoriteButton from "../components/ui/FavoriteButton";
 import BackgroundImage from "../components/ui/BackgroundImage";
-import { updatePlace } from "../util/http";
-import { UserContext } from "../store/user-context";
+import { PlaceIdContext } from "../store/place-id-context";
 
 function PlaceDetails({ route, navigation }) {
   const [isFetching, setIsFetching] = useState(true);
@@ -25,16 +29,20 @@ function PlaceDetails({ route, navigation }) {
     navigation.navigate("Map", {
       initialLat: fetchedPlace.location.lat,
       initialLng: fetchedPlace.location.lng,
+      edit: false,
     });
   }
 
   const selectedPlaceId = route.params.placeId;
   const userCtx = useContext(UserContext);
+  const placeIdCtx = useContext(PlaceIdContext);
 
-  async function changeFavoriteStatusHandler() {
-    if (!fetchedPlace.favorite) {
+  async function changeFavoriteStatusHandler(placeId) {
+    try {
+      await storeFavoritePlaceId(placeId);
       setPlaceIsFavorite(true);
-      await updatePlace(selectedPlaceId, fetchedPlace);
+    } catch (error) {
+      console.log(error);
     }
   }
 
@@ -58,6 +66,7 @@ function PlaceDetails({ route, navigation }) {
       try {
         const place = await fetchPlaceDetails(selectedPlaceId);
         setFetchedPlace(place);
+        placeIdCtx.storePlaceId(selectedPlaceId);
         navigation.setOptions({
           title: place.title,
         });
@@ -141,12 +150,17 @@ function PlaceDetails({ route, navigation }) {
 
   return (
     <ScrollView>
-      <LinearGradient colors={[Colors.primary1100, Colors.primary1200]}>
+      <LinearGradient
+        style={styles.wrapper}
+        colors={[Colors.primary1100, Colors.primary1200]}
+      >
         <Image style={styles.image} source={{ uri: fetchedPlace.imageUriC }} />
-        <Image style={styles.image} source={{ uri: fetchedPlace.imageUriG }} />
         <View style={styles.locationContainer}>
           <View style={styles.addressContainer}>
             <Text style={styles.address}>{fetchedPlace.address}</Text>
+          </View>
+          <View style={styles.addressContainer}>
+            <Text style={styles.address}>{fetchedPlace.date}</Text>
           </View>
           <ScrollView style={styles.descriptionContainer}>
             <Text style={styles.description}>"{fetchedPlace.description}"</Text>
@@ -157,12 +171,14 @@ function PlaceDetails({ route, navigation }) {
 
           <View style={styles.deleteContainer}>
             {userCtx.email === fetchedPlace.user && (
-              <IconButton
-                icon="trash"
-                color={"black"}
-                size={36}
-                onPress={acceptDeleteHandler}
-              />
+              <View style={styles.actions}>
+                <IconButton
+                  icon="trash"
+                  color={"black"}
+                  size={36}
+                  onPress={acceptDeleteHandler}
+                />
+              </View>
             )}
           </View>
         </View>
@@ -174,6 +190,9 @@ function PlaceDetails({ route, navigation }) {
 export default PlaceDetails;
 
 const styles = StyleSheet.create({
+  wrapper: {
+    height: "100%",
+  },
   fallback: {
     flex: 1,
     justifyContent: "center",
@@ -188,6 +207,7 @@ const styles = StyleSheet.create({
   locationContainer: {
     justifyContent: "center",
     alignItems: "center",
+    marginTop: 24,
   },
   addressContainer: {
     padding: 20,
@@ -221,7 +241,12 @@ const styles = StyleSheet.create({
     borderTopWidth: 2,
     borderTopColor: "whites",
     alignItems: "center",
-    marginBottom: 32,
+    marginBottom: 34,
+  },
+  actions: {
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
   },
   centeredView: {
     flex: 1,

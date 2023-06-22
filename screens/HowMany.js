@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, Image } from "react-native";
 import { useState, useEffect } from "react";
 import { StyleSheet } from "react-native";
 
@@ -9,7 +9,6 @@ import { numberOfPlaces } from "../util/http";
 import { useIsFocused } from "@react-navigation/native";
 
 function HowMany({ navigation, route }) {
-
   const [placesNumber, setPlacesNumber] = useState(0);
 
   const isFocused = useIsFocused();
@@ -32,6 +31,12 @@ function HowMany({ navigation, route }) {
     });
   }
 
+  function seeHowToHandler() {
+    navigation.navigate("HowTo", {
+      numberPlaces: placesNumber,
+    });
+  }
+
   return (
     <BackgroundImage>
       <View style={styles.viewPort}>
@@ -39,8 +44,18 @@ function HowMany({ navigation, route }) {
           <Text style={styles.text}>
             You have {placesNumber} places to view !
           </Text>
-
-          <Button onPress={seePlacesHandler}>View Places</Button>
+          <Image
+            style={styles.imageStyles}
+            source={{
+              uri: "https://media2.giphy.com/media/ueVQiEIDXtOV6oQhOW/giphy.gif",
+            }}
+          />
+          <View style={styles.buttons}>
+            <Button onPress={seePlacesHandler}>
+              View Places
+            </Button>
+            <Button onPress={seeHowToHandler}>How To</Button>
+          </View>
         </View>
       </View>
     </BackgroundImage>
@@ -66,7 +81,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     elevation: 5,
     shadowColor: Colors.primary500,
-    shadowOpacity: 0.15,
+    shadowOpacity: 0.5,
     shadowOffset: { width: 1, height: 1 },
     shadowRadius: 2,
     padding: 24,
@@ -78,5 +93,19 @@ const styles = StyleSheet.create({
     textShadowRadius: 5,
     flex: 2,
     fontSize: 20,
+  },
+  buttons: {
+    flexDirection: "row",
+    // justifyContent: "space-between",
+    // alignItems: "center",
+  },
+  imageStyles: {
+    width: "60%",
+    height: "60%",
+    elevation: 5,
+    shadowColor: Colors.primary500,
+    shadowOpacity: 0.5,
+    shadowOffset: { width: 1, height: 1 },
+    shadowRadius: 2,
   },
 });

@@ -4,9 +4,12 @@ import { Colors } from "../../constants/styles";
 
 function Message({ message }) {
   return (
-    <View>
-      <Text style={styles.text}>{message.user}: </Text>
-      <Text style={styles.container}>{message.message}</Text>
+    <View style={styles.wrapper}>
+      <Text style={styles.user}>{message.user}: </Text>
+      <View style={styles.message}>
+        <Text>{message.message}</Text>
+        <Text style={styles.date}>{message.date}</Text>
+      </View>
     </View>
   );
 }
@@ -14,7 +17,10 @@ function Message({ message }) {
 export default Message;
 
 const styles = StyleSheet.create({
-  container: {
+  wrapper: {
+    alignItems: "center",
+  },
+  message: {
     backgroundColor: Colors.primary100,
     opacity: 0.9,
     marginTop: 1,
@@ -22,10 +28,17 @@ const styles = StyleSheet.create({
     marginRight: 1,
     marginBottom: 1,
     borderRadius: 8,
-    padding: 7,
+    padding: 9,
+    width: "98%",
+    justifyContent: "center",
     color: Colors.primary500,
   },
-  text: {
+  user: {
     color: Colors.primary900,
+    alignSelf: "flex-start",
+  },
+  date: {
+    fontSize: 8,
+    color: Colors.primary500,
   },
 });

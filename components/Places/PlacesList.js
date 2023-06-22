@@ -5,13 +5,14 @@ import {
   View,
   useWindowDimensions,
 } from "react-native";
+import { Button } from "@rneui/themed";
 import { useNavigation } from "@react-navigation/native";
 import { useRef, useState } from "react";
 import { Icon } from "react-native-elements";
+import { LinearGradient } from "expo-linear-gradient";
 
 import { Colors } from "../../constants/styles";
 import PlaceItem from "./PlaceItem";
-import FlatButton from "../ui/FlatButton";
 
 function PlacesList({ places }) {
   const navigation = useNavigation();
@@ -35,9 +36,6 @@ function PlacesList({ places }) {
   if (!places || places.length === 0) {
     return (
       <View style={styles.fallbackContainer}>
-        <FlatButton style={styles.forumButton} onPress={goToForumHandler}>
-          Forum
-        </FlatButton>
         <Text style={styles.fallbackText}>
           No places added yet - start adding some!
         </Text>
@@ -47,9 +45,18 @@ function PlacesList({ places }) {
 
   return (
     <View style={styles.alignment}>
-      <FlatButton style={styles.forumButton} onPress={goToForumHandler}>
+      <Button
+        ViewComponent={LinearGradient}
+        linearGradientProps={{
+          colors: [Colors.primary1100, Colors.primary1200],
+          start: { x: 0, y: 0.5 },
+          end: { x: 1, y: 0.5 },
+        }}
+        style={styles.forumButton}
+        onPress={goToForumHandler}
+      >
         Forum
-      </FlatButton>
+      </Button>
       <FlatList
         data={places}
         keyExtractor={(item) => item.id}
@@ -65,7 +72,7 @@ function PlacesList({ places }) {
         <Icon
           name="south"
           type="material"
-          color="teal"
+          color={Colors.primary1100}
           raised
           reverse
           containerStyle={styles.scrollTopButton}
@@ -78,7 +85,7 @@ function PlacesList({ places }) {
         <Icon
           name="north"
           type="material"
-          color="teal"
+          color={Colors.primary1100}
           raised
           reverse
           containerStyle={styles.scrollTopButton}
@@ -99,15 +106,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     width: "90%",
-    // marginLeft: "5%",
-    // marginRight: "5%",
   },
   fallbackText: {
     fontSize: 16,
     color: Colors.primary200,
   },
   alignment: {
-    marginBottom: 45,
+    marginBottom: 138,
+    // alignItems: "center",
   },
   number: {
     marginTop: 4,
@@ -129,5 +135,9 @@ const styles = StyleSheet.create({
   },
   forumButton: {
     marginBottom: 4,
+    borderRadius: 16,
+    padding: 16,
+    width: "50%",
+    alignSelf: "center",
   },
 });

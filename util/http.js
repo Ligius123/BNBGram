@@ -14,8 +14,8 @@ export async function storeMessage(message) {
   return id;
 }
 
-export async function storeLike(like) {
-  const response = await axios.post(BACKEND_URL + "/place.json", like);
+export async function storeFavoritePlaceId(placeId) {
+  const response = await axios.post(BACKEND_URL + "/favorite.json", placeId);
   const id = response.data.name;
   return id;
 }
@@ -30,6 +30,7 @@ export async function fetchMessage() {
       id: key,
       message: response.data[key].message,
       user: response.data[key].user,
+      date: response.data[key].date,
     };
     message.push(messageObj);
   }
@@ -45,10 +46,8 @@ export async function fetchPlaceDetails(id) {
     description: response.data.description,
     location: response.data.location,
     imageUriC: response.data.imageUriC,
-    imageUriG: response.data.imageUriG,
     title: response.data.title,
     date: response.data.date,
-    favorite: response.data.false,
     user: response.data.user,
   };
 
@@ -67,10 +66,8 @@ export async function fetchPlace() {
       description: response.data[key].description,
       location: response.data[key].location,
       imageUriC: response.data[key].imageUriC,
-      imageUriG: response.data[key].imageUriG,
       title: response.data[key].title,
       date: response.data[key].date,
-      favorite: response.data[key].favorite,
       user: response.data[key].user,
     };
     places.push(placeObj);
@@ -89,24 +86,20 @@ export async function numberOfPlaces() {
   return count;
 }
 
-export async function fetchFavoritePlace(ids) {
-  const response = await axios.get(BACKEND_URL + "/place.json");
+export async function fetchFavoritePlace() {
+  const response = await axios.get(BACKEND_URL + "/favorite.json");
 
-  const places = [];
+  const favoritePlaces = [];
 
   for (const key in response.data) {
     const placeObj = {
       id: key,
-      address: response.data[key].address,
-      description: response.data[key].description,
-      location: response.data[key].location,
-      imageUriC: response.data[key].imageUriC,
-      imageUriG: response.data[key].imageUriG,
-      title: response.data[key].title,
+      placeId: response.data[key].placeId,
+      // user: response.data[key].user,
     };
-    places.push(placeObj);
+    favoritePlaces.push(placeObj.placeId);
   }
-  return places;
+  return favoritePlaces;
 }
 
 export function updatePlace(id, place) {

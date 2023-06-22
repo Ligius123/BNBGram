@@ -15,7 +15,7 @@ import { Colors } from "../../constants/styles";
 import OutlinedButton from "../ui/OutlinedButton";
 import { getAddress, getMapPreview } from "../../util/location";
 
-function LocationPicker({ onPickLocation }) {
+function LocationPicker({ onPickLocation, editable }) {
   const [pickedLocation, setPickedLocation] = useState();
   const isFocused = useIsFocused();
 
@@ -103,14 +103,16 @@ function LocationPicker({ onPickLocation }) {
   return (
     <View>
       <View style={styles.mapPreview}>{locationPreview}</View>
-      <View style={styles.actions}>
-        <OutlinedButton icon="location" onPress={getLocationHandler}>
-          Locate User
-        </OutlinedButton>
-        <OutlinedButton icon="map" onPress={pickOnMapHandler}>
-          Pick on Map
-        </OutlinedButton>
-      </View>
+      {!editable && (
+        <View style={styles.actions}>
+          <OutlinedButton icon="location" onPress={getLocationHandler}>
+            Locate User
+          </OutlinedButton>
+          <OutlinedButton icon="map" onPress={pickOnMapHandler}>
+            Pick on Map
+          </OutlinedButton>
+        </View>
+      )}
     </View>
   );
 }

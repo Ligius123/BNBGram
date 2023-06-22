@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 
 import PlaceForm from "../components/Places/PlaceForm";
 import BackgroundImage from "../components/ui/BackgroundImage";
@@ -9,10 +9,15 @@ import ErrorOverlay from "../components/ui/ErrorOverlay";
 function AddPlace({ navigation }) {
   const [isCreating, setIsCreating] = useState(false);
   const [error, setError] = useState();
+
+
+
+
+
   async function createPlaceHandler(place) {
     setIsCreating(true);
     try {
-      const id = await storePlace(place);
+      await storePlace(place);
       navigation.navigate("AllPlaces", {
         place: place,
       });

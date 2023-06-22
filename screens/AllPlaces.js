@@ -14,25 +14,28 @@ function AllPlaces({ route }) {
   const [isFetching, setIsFetching] = useState(false);
   const [error, setError] = useState();
   const [loadedPlaces, setLoadedPlaces] = useState([]);
+  const [loadedPlacesFilter, setLoadedPlacesFilter] = useState([]);
   const [search, setSearch] = useState("");
+  const [first, setFirst] = useState(false);
 
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    async function loadPlaces() {
+    async function loadAllPlaces() {
       setIsFetching(true);
       try {
-        const places = await fetchPlace();
-        setLoadedPlaces(places);
+        const allPlaces = await fetchPlace();
+        if (!first) {
+          setLoadedPlacesFilter(allPlaces);
+        }
+        setLoadedPlaces(allPlaces);
       } catch (error) {
         setError("Could not fetch places!");
       }
       setIsFetching(false);
     }
-
-    loadPlaces();
-    // setLoadedPlaces((curPlaces) => [...curPlaces, route.params.place]);
-  }, [isFocused, route]);
+    loadAllPlaces();
+  }, [route, isFocused]);
 
   if (error && !isFetching) {
     return <ErrorOverlay message={error} />;
@@ -42,8 +45,9 @@ function AllPlaces({ route }) {
     return <LoadingOverlay message="View all places..." />;
   }
 
-  const searchFilter = (text) => {
+  function searchFilter(text) {
     if (text) {
+      setFirst(true);
       const newData = loadedPlaces.filter((item) => {
         const itemData = item.title
           ? item.title.toUpperCase()
@@ -51,23 +55,23 @@ function AllPlaces({ route }) {
         const textData = text.toUpperCase();
         return itemData.indexOf(textData) > -1;
       });
-      setLoadedPlaces(newData);
+      setLoadedPlacesFilter(newData);
       setSearch(text);
     } else {
-      setLoadedPlaces(loadedPlaces);
+      setLoadedPlacesFilter(loadedPlaces);
       setSearch(text);
     }
-  };
+  }
 
   return (
     <BackgroundImage>
-       <TextInput
-        style={styles.searchBar}
+      <TextInput
+        style={[styles.searchBar, search.length > 0 && styles.highlight]}
         value={search}
         placeholder="Search for places here"
         onChangeText={(text) => searchFilter(text)}
       />
-      <PlacesList places={loadedPlaces} />
+      <PlacesList places={loadedPlacesFilter} />
     </BackgroundImage>
   );
 }
@@ -89,5 +93,18 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
     shadowColor: Colors.primary500,
     elevation: 7,
+    borderRadius: 16,
+    width: "95%",
+    alignSelf: "center",
   },
-})
+  highlight: {
+    borderBottomColor: Colors.primary1100,
+    borderBottomWidth: 3,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    shadowColor: Colors.primary900,
+    elevation: 10,
+    fontWeight: "bold",
+  },
+});

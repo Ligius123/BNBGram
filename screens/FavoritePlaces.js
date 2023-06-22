@@ -1,38 +1,165 @@
-import { View, Text, StyleSheet } from "react-native";
-import { useContext } from "react";
+import { useEffect, useState } from "react";
+import { useIsFocused } from "@react-navigation/native";
+import { TextInput } from "react-native-gesture-handler";
+import { StyleSheet, View, Text } from "react-native";
+import axios from "axios";
 
 import PlacesList from "../components/Places/PlacesList";
-import { FavoritesContext } from "../store/favorites-context";
+import BackgroundImage from "../components/ui/BackgroundImage";
+import { fetchFavoritePlace } from "../util/http";
+import LoadingOverlay from "../components/ui/LoadingOverlay";
+import ErrorOverlay from "../components/ui/ErrorOverlay";
+import { Colors } from "../constants/styles";
+import { useContext } from "react";
+import { UserContext } from "../store/user-context";
 
-function FavoritesScreen() {
-  const favoritePlacesCtx = useContext(FavoritesContext);
+function AllPlaces({ route }) {
+  const [isFetching, setIsFetching] = useState(false);
+  const [error, setError] = useState();
+  const [loadedPlaces, setLoadedPlaces] = useState([]);
+  const [loadedPlacesFilter, setLoadedPlacesFilter] = useState([]);
+  const [favPlaceId, setFavPlaceId] = useState([]);
+  const [search, setSearch] = useState("");
+  const [first, setFirst] = useState(false);
 
-  const favoritePlaces = favoritePlacesCtx.allIds.filter((placeId) =>
-    favoritePlacesCtx.ids.includes(placeId)
-  );
+  const isFocused = useIsFocused();
+  const userCtx = useContext(UserContext);
+  const BACKEND_URL = "https://bnbgram-default-rtdb.firebaseio.com";
 
-  if (favoritePlaces.length === 0) {
-    return (
-      <View style={styles.rootContainer}>
-        <Text style={styles.text}>You have no favorite places yet.</Text>
-      </View>
-    );
+  useEffect(() => {
+    async function loadFavoritePlacesId() {
+      setIsFetching(true);
+      try {
+        const favIds = await fetchFavoritePlace();
+        setFavPlaceId(favIds);
+      } catch (error) {
+        setError("Could not fetch favorite places!");
+      }
+      setIsFetching(false);
+    }
+
+    loadFavoritePlacesId();
+  }, [isFocused, route]);
+
+  async function fetchFavIdPlace() {
+    const response = await axios.get(BACKEND_URL + "/place.json");
+
+    const places = [];
+
+    for (const key in response.data) {
+      const placeObj = {
+        id: key,
+        address: response.data[key].address,
+        description: response.data[key].description,
+        location: response.data[key].location,
+        imageUriC: response.data[key].imageUriC,
+        title: response.data[key].title,
+        date: response.data[key].date,
+        user: response.data[key].user,
+      };
+     
+      if (favPlaceId.includes(placeObj.id)) {
+        places.push(placeObj);
+      }
+    }
+    return places;
   }
 
-  return <PlacesList items={favoritePlaces} />;
+ // if(favPlaceId.placeId === placeObj.id){
+      //   places.push(placeObj);
+      // }
+
+  useEffect(() => {
+    async function loadAllPlaces() {
+      setIsFetching(true);
+      try {
+        const favoritePlaces = await fetchFavIdPlace();
+        if (!first) {
+          setLoadedPlacesFilter(favoritePlaces);
+        }
+        setLoadedPlaces(favoritePlaces);
+      } catch (error) {
+        setError("Could not fetch id places!");
+      }
+      setIsFetching(false);
+    }
+
+    loadAllPlaces();
+  }, [route, isFocused]);
+
+  if (error && !isFetching) {
+    return <ErrorOverlay message={error} />;
+  }
+
+  if (isFetching) {
+    return <LoadingOverlay message="View my favorites places..." />;
+  }
+
+  function searchFilter(text) {
+    if (text) {
+      setFirst(true);
+      const newData = loadedPlaces.filter((item) => {
+        const itemData = item.title
+          ? item.title.toUpperCase()
+          : "".toUpperCase();
+        const textData = text.toUpperCase();
+        return itemData.indexOf(textData) > -1;
+      });
+      setLoadedPlacesFilter(newData);
+      setSearch(text);
+    } else {
+      setLoadedPlacesFilter(loadedPlaces);
+      setSearch(text);
+    }
+  }
+
+  return (
+    <BackgroundImage>
+      <TextInput
+        style={[styles.searchBar, search.length > 0 && styles.highlight]}
+        value={search}
+        placeholder="Search for places here"
+        onChangeText={(text) => searchFilter(text)}
+      />
+      <PlacesList places={loadedPlacesFilter} />
+    </BackgroundImage>
+  );
 }
 
-export default FavoritesScreen;
+export default AllPlaces;
 
 const styles = StyleSheet.create({
-  rootContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+  searchBar: {
+    marginVertical: 8,
+    paddingHorizontal: 4,
+    paddingVertical: 8,
+    fontSize: 16,
+    borderBottomColor: Colors.primary1100,
+    borderBottomWidth: 2,
+    backgroundColor: Colors.primary900,
+    opacity: 0.4,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    shadowColor: Colors.primary500,
+    elevation: 7,
+    borderRadius: 16,
+    width: "95%",
+    alignSelf: "center",
   },
-  text: {
-    fontSize: 18,
+  test: {
+    backgroundColor: "red",
+    padding: 4,
+    color: "black",
+  },
+  highlight: {
+    borderBottomColor: Colors.primary1100,
+    borderBottomWidth: 3,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    shadowColor: Colors.primary900,
+    elevation: 10,
     fontWeight: "bold",
-    color: "white",
   },
 });

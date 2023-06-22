@@ -1,5 +1,8 @@
 import { useEffect, useState, useContext } from "react";
 import { useIsFocused } from "@react-navigation/native";
+import { TextInput } from "react-native-gesture-handler";
+import { StyleSheet } from "react-native";
+import { Colors } from "../constants/styles";
 import axios from "axios";
 
 import PlacesList from "../components/Places/PlacesList";
@@ -12,6 +15,9 @@ function MyPlaces({ route }) {
   const [isFetching, setIsFetching] = useState(false);
   const [error, setError] = useState();
   const [loadedPlaces, setLoadedPlaces] = useState([]);
+  const [loadedPlacesFilter, setLoadedPlacesFilter] = useState([]);
+  const [search, setSearch] = useState("");
+  const [first, setFirst] = useState(false);
 
   const BACKEND_URL = "https://bnbgram-default-rtdb.firebaseio.com";
 
@@ -32,10 +38,8 @@ function MyPlaces({ route }) {
           description: response.data[key].description,
           location: response.data[key].location,
           imageUriC: response.data[key].imageUriC,
-          imageUriG: response.data[key].imageUriG,
           title: response.data[key].title,
           date: response.data[key].date,
-          favorite: response.data[key].favorite,
           user: response.data[key].user,
         };
         places.push(placeObj);
@@ -45,10 +49,13 @@ function MyPlaces({ route }) {
   }
 
   useEffect(() => {
-    async function loadPlaces() {
+    async function loadMyPlaces() {
       setIsFetching(true);
       try {
         const myPlaces = await fetchMyPlace();
+        if (!first) {
+          setLoadedPlacesFilter(myPlaces);
+        }
         setLoadedPlaces(myPlaces);
       } catch (error) {
         setError("Could not fetch my places!");
@@ -56,9 +63,9 @@ function MyPlaces({ route }) {
       setIsFetching(false);
     }
 
-    loadPlaces();
+    loadMyPlaces();
     // setLoadedPlaces((curPlaces) => [...curPlaces, route.params.place]);
-  }, [isFocused, route]);
+  }, [route, isFocused]);
 
   if (error && !isFetching) {
     return <ErrorOverlay message={error} />;
@@ -68,11 +75,66 @@ function MyPlaces({ route }) {
     return <LoadingOverlay message="View my places..." />;
   }
 
+  function searchFilter(text) {
+    if (text) {
+      setFirst(true);
+      const newData = loadedPlaces.filter((item) => {
+        const itemData = item.title
+          ? item.title.toUpperCase()
+          : "".toUpperCase();
+        const textData = text.toUpperCase();
+        return itemData.indexOf(textData) > -1;
+      });
+      setLoadedPlacesFilter(newData);
+      setSearch(text);
+    } else {
+      setLoadedPlacesFilter(loadedPlaces);
+      setSearch(text);
+    }
+  }
+
   return (
     <BackgroundImage>
-      <PlacesList places={loadedPlaces} />
+      <TextInput
+        style={[styles.searchBar, search.length > 0 && styles.highlight]}
+        value={search}
+        placeholder="Search for places here"
+        onChangeText={(text) => searchFilter(text)}
+      />
+      <PlacesList places={loadedPlacesFilter} />
     </BackgroundImage>
   );
 }
 
 export default MyPlaces;
+
+const styles = StyleSheet.create({
+  searchBar: {
+    marginVertical: 8,
+    paddingHorizontal: 4,
+    paddingVertical: 8,
+    fontSize: 16,
+    borderBottomColor: Colors.primary1100,
+    borderBottomWidth: 2,
+    backgroundColor: Colors.primary900,
+    opacity: 0.4,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    shadowColor: Colors.primary500,
+    elevation: 7,
+    borderRadius: 16,
+    width: "95%",
+    alignSelf: "center",
+  },
+  highlight: {
+    borderBottomColor: Colors.primary1100,
+    borderBottomWidth: 3,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    shadowColor: Colors.primary900,
+    elevation: 10,
+    fontWeight: "bold",
+  },
+});

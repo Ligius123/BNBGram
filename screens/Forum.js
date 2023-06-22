@@ -15,14 +15,15 @@ function Forum({ route }) {
   const [isFetching, setIsFetching] = useState(false);
   const [error, setError] = useState();
   const [loadedMessages, setLoadedMessages] = useState([]);
+  const [count, setCount] = useState(0);
 
   const isFocused = useIsFocused();
   async function createMessageHandler(message) {
     try {
-      const id = await storeMessage(message);
+      await storeMessage(message);
+      setCount((count) => count + 1);
     } catch (error) {
       Alert.alert("Not enough arguments", "You have to fill al the fields");
-      console.log(error);
     }
   }
 
@@ -33,15 +34,12 @@ function Forum({ route }) {
         const message = await fetchMessage();
         setLoadedMessages(message);
       } catch (error) {
-        console.log(error);
         setError("Could not fetch messages!");
       }
       setIsFetching(false);
     }
-
     loadMessages();
-    // setLoadedPlaces((curPlaces) => [...curPlaces, route.params.place]);
-  }, [isFocused, route]);
+  }, [isFocused, route, count]);
 
   if (error && !isFetching) {
     return <ErrorOverlay message={error} />;
@@ -54,21 +52,18 @@ function Forum({ route }) {
   return (
     <BackgroundImage>
       <View style={styles.forum}>
-        <Chat onCreateMessage={createMessageHandler}></Chat>
-
         <FlatList
           data={loadedMessages}
           keyExtractor={(item) => item.id}
-          // ref={listRef}
-          // onScroll={(event) => {
-          //   setContentVerticalOffset(event.nativeEvent.contentOffset.y);
-          // }}
           renderItem={({ item }) => <Message message={item} />}
         />
+        <Chat onCreateMessage={createMessageHandler} />
       </View>
     </BackgroundImage>
   );
 }
+
+export default Forum;
 
 const styles = StyleSheet.create({
   forum: {
@@ -78,5 +73,3 @@ const styles = StyleSheet.create({
     opacity: 0.8,
   },
 });
-
-export default Forum;

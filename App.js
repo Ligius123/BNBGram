@@ -12,15 +12,17 @@ import AllPlaces from "./screens/AllPlaces";
 import Map from "./screens/Map";
 import PlaceDetails from "./screens/PlaceDetails";
 import HowMany from "./screens/HowMany";
+import HowTo from "./screens/HowTo";
 import MyPlaces from "./screens/MyPlaces";
 import IconButton from "./components/ui/IconButton";
 import { Colors } from "./constants/styles";
 import AuthContextProvider, { AuthContext } from "./store/auth-context";
-import FavoritesContextProvider from "./store/favorites-context";
 import FavoritePlaces from "./screens/FavoritePlaces";
 import PlacesNumberContextProvider from "./store/numberPlaces-context";
 import UserContextProvider from "./store/user-context";
 import Forum from "./screens/Forum";
+import PlaceIdContextProvider from "./store/place-id-context";
+import UpdateContextProvider from "./store/place-update-context";
 
 const Stack = createNativeStackNavigator();
 const BottomTab = createBottomTabNavigator();
@@ -51,10 +53,14 @@ function StackScreens() {
       }}
     >
       <Stack.Screen name="HowMany" component={HowMany} />
-      <Stack.Screen name="Map" component={Map}  options={{
+      <Stack.Screen
+        name="Map"
+        component={Map}
+        options={{
           title: "Map",
           headerShown: true,
-        }} />
+        }}
+      />
       <Stack.Screen
         name="PlaceDetails"
         component={PlaceDetails}
@@ -63,6 +69,7 @@ function StackScreens() {
           headerShown: true,
         }}
       />
+      <Stack.Screen name="HowTo" component={HowTo} />
       <Stack.Screen name="Forum" component={Forum} />
     </Stack.Navigator>
   );
@@ -153,13 +160,15 @@ export default function App() {
     <>
       <StatusBar style="light" />
       <AuthContextProvider>
-        <FavoritesContextProvider>
-          <PlacesNumberContextProvider>
-            <UserContextProvider>
-              <Navigation />
-            </UserContextProvider>
-          </PlacesNumberContextProvider>
-        </FavoritesContextProvider>
+        <UpdateContextProvider>
+          <PlaceIdContextProvider>
+            <PlacesNumberContextProvider>
+              <UserContextProvider>
+                <Navigation />
+              </UserContextProvider>
+            </PlacesNumberContextProvider>
+          </PlaceIdContextProvider>
+        </UpdateContextProvider>
       </AuthContextProvider>
     </>
   );
