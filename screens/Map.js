@@ -1,11 +1,29 @@
-import { useCallback, useLayoutEffect, useState } from "react";
+import {
+  useCallback,
+  useLayoutEffect,
+  useState,
+  useEffect,
+  useContext,
+} from "react";
 import { Alert, StyleSheet } from "react-native";
 import MapView, { Marker } from "react-native-maps";
+import { useIsFocused } from "@react-navigation/native";
 
 import IconButton from "../components/ui/IconButton";
 
-function Map({ navigation }) {
+function Map({ navigation, route }) {
   const [selectedLocation, setSelectedLocation] = useState();
+  const [editable, setEditable] = useState(false);
+  const [selectedPlaceId, setSelectedPlaceId] = useState("");
+
+  const isFocused = useIsFocused();
+
+  console.log(selectedPlaceId + " is editable = " + editable);
+
+  useEffect(() => {
+    setEditable(route.params.edit);
+    setSelectedPlaceId(route.params.placeId);
+  }, [route, isFocused]);
 
   const region = {
     latitude: 37.78,
@@ -37,16 +55,18 @@ function Map({ navigation }) {
   }, [navigation, selectedLocation]);
 
   useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight: ({ tintColor }) => (
-        <IconButton
-          icon="save"
-          size={24}
-          color={tintColor}
-          onPress={savePickedLocationHandler}
-        />
-      ),
-    });
+    if (editable) {
+      navigation.setOptions({
+        headerRight: ({ tintColor }) => (
+          <IconButton
+            icon="save"
+            size={24}
+            color={tintColor}
+            onPress={savePickedLocationHandler}
+          />
+        ),
+      });
+    }
   }, [navigation, savePickedLocationHandler]);
 
   return (
@@ -55,7 +75,7 @@ function Map({ navigation }) {
       initialRegion={region}
       onPress={selectLocationHandler}
     >
-      {selectedLocation && (
+      {selectedLocation && editable && (
         <Marker
           title="Picked Location"
           coordinate={{

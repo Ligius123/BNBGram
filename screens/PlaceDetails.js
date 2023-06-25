@@ -1,17 +1,31 @@
-import { useEffect, useState, useLayoutEffect } from "react";
-import { ScrollView, Image, View, Text, Modal, StyleSheet } from "react-native";
-import { useContext } from "react";
-import { FavoritesContext } from "../store/favorites-context";
+import { useEffect, useState, useLayoutEffect, useContext } from "react";
+import {
+  ScrollView,
+  Image,
+  View,
+  Text,
+  Modal,
+  Alert,
+  StyleSheet,
+} from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import { UserContext } from "../store/user-context";
+import {
+  fetchPlaceDetails,
+  deletePlace,
+  storeFavoritePlaceId,
+  fetchFavoritePlace,
+  deleteFavoritePlace,
+} from "../util/http";
 
 import OutlinedButton from "../components/ui/OutlinedButton";
 import { Colors } from "../constants/styles";
-import { fetchPlaceDetails, deletePlace } from "../util/http";
 import LoadingOverlay from "../components/ui/LoadingOverlay";
 import ErrorOverlay from "../components/ui/ErrorOverlay";
 import IconButton from "../components/ui/IconButton";
 import FavoriteButton from "../components/ui/FavoriteButton";
 import BackgroundImage from "../components/ui/BackgroundImage";
+import { PlaceIdContext } from "../store/place-id-context";
 
 function PlaceDetails({ route, navigation }) {
   const [isFetching, setIsFetching] = useState(true);
@@ -19,28 +33,37 @@ function PlaceDetails({ route, navigation }) {
   const [fetchedPlace, setFetchedPlace] = useState();
   const [isDeleting, setIsDeleting] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [placeIsFavorite, setPlaceIsFavorite] = useState(false);
+  const [favId, setFavId] = useState([]);
 
   function showOnMapHandler() {
     navigation.navigate("Map", {
       initialLat: fetchedPlace.location.lat,
       initialLng: fetchedPlace.location.lng,
+      edit: false,
     });
   }
 
-  const favoritePlaces = useContext(FavoritesContext);
   const selectedPlaceId = route.params.placeId;
+  const userCtx = useContext(UserContext);
+  const placeIdCtx = useContext(PlaceIdContext);
 
-  const placeIsFavorite = favoritePlaces.ids.includes(selectedPlaceId);
-
-  async function changeFavoriteStatusHandler() {
+  async function changeFavoriteStatusHandler(placeId) {
     if (placeIsFavorite) {
-      favoritePlaces.removeFavorite(selectedPlaceId);
+      try {
+        await deleteFavoritePlace(selectedPlaceId);
+        setPlaceIsFavorite(false);
+      } catch (error) {
+        setError(error);
+      }
     } else {
-      favoritePlaces.addFavorite(selectedPlaceId);
+      try {
+        await storeFavoritePlaceId(placeId, selectedPlaceId);
+        setPlaceIsFavorite(true);
+      } catch (error) {
+        console.log(error);
+      }
     }
-    navigation.navigate("FavoritePlaces", {
-      ids: favoritePlaces.ids,
-    });
   }
 
   useLayoutEffect(() => {
@@ -58,11 +81,29 @@ function PlaceDetails({ route, navigation }) {
   }, [navigation, changeFavoriteStatusHandler]);
 
   useEffect(() => {
+    async function getFavId() {
+      try {
+        const favorites = await fetchFavoritePlace();
+        setFavId(favorites);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getFavId();
+  }, [selectedPlaceId]);
+
+  useEffect(() => {
     async function loadPlaceData() {
       setIsFetching(true);
       try {
         const place = await fetchPlaceDetails(selectedPlaceId);
         setFetchedPlace(place);
+        placeIdCtx.storePlaceId(selectedPlaceId);
+        if (favId.includes(selectedPlaceId)) {
+          setPlaceIsFavorite(true);
+        } else {
+          setPlaceIsFavorite(false);
+        }
         navigation.setOptions({
           title: place.title,
         });
@@ -100,6 +141,15 @@ function PlaceDetails({ route, navigation }) {
     setIsDeleting(false);
   }
 
+  function updateHandler() {
+    navigation.navigate("Map", {
+      initialLat: fetchedPlace.location.lat,
+      initialLng: fetchedPlace.location.lng,
+      edit: true,
+      placeId: selectedPlaceId,
+    });
+  }
+
   if (error && !isDeleting) {
     return <ErrorOverlay message={error} />;
   }
@@ -110,7 +160,6 @@ function PlaceDetails({ route, navigation }) {
 
   if (modalVisible) {
     return (
-      // <LinearGradient colors={[Colors.primary1100, Colors.primary1200]}>
       <BackgroundImage>
         <View style={styles.centeredView}>
           <Modal
@@ -147,12 +196,17 @@ function PlaceDetails({ route, navigation }) {
 
   return (
     <ScrollView>
-      <LinearGradient colors={[Colors.primary1100, Colors.primary1200]}>
+      <LinearGradient
+        style={styles.wrapper}
+        colors={[Colors.primary1100, Colors.primary1200]}
+      >
         <Image style={styles.image} source={{ uri: fetchedPlace.imageUriC }} />
-        <Image style={styles.image} source={{ uri: fetchedPlace.imageUriG }} />
         <View style={styles.locationContainer}>
           <View style={styles.addressContainer}>
             <Text style={styles.address}>{fetchedPlace.address}</Text>
+          </View>
+          <View style={styles.addressContainer}>
+            <Text style={styles.address}>{fetchedPlace.date}</Text>
           </View>
           <ScrollView style={styles.descriptionContainer}>
             <Text style={styles.description}>"{fetchedPlace.description}"</Text>
@@ -160,13 +214,24 @@ function PlaceDetails({ route, navigation }) {
           <OutlinedButton icon="map" onPress={showOnMapHandler}>
             View on Map
           </OutlinedButton>
+
           <View style={styles.deleteContainer}>
-            <IconButton
-              icon="trash"
-              color={"black"}
-              size={36}
-              onPress={acceptDeleteHandler}
-            />
+            {userCtx.email === fetchedPlace.user && (
+              <View style={styles.actions}>
+                <IconButton
+                  icon="trash"
+                  color={"black"}
+                  size={36}
+                  onPress={acceptDeleteHandler}
+                />
+                <IconButton
+                  icon="pencil"
+                  color={"black"}
+                  size={36}
+                  onPress={updateHandler}
+                />
+              </View>
+            )}
           </View>
         </View>
       </LinearGradient>
@@ -177,6 +242,9 @@ function PlaceDetails({ route, navigation }) {
 export default PlaceDetails;
 
 const styles = StyleSheet.create({
+  wrapper: {
+    height: "100%",
+  },
   fallback: {
     flex: 1,
     justifyContent: "center",
@@ -191,6 +259,7 @@ const styles = StyleSheet.create({
   locationContainer: {
     justifyContent: "center",
     alignItems: "center",
+    marginTop: 24,
   },
   addressContainer: {
     padding: 20,
@@ -224,7 +293,12 @@ const styles = StyleSheet.create({
     borderTopWidth: 2,
     borderTopColor: "whites",
     alignItems: "center",
-    marginBottom: 32,
+    marginBottom: 34,
+  },
+  actions: {
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
   },
   centeredView: {
     flex: 1,

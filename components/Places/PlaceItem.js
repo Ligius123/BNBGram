@@ -9,44 +9,25 @@ import {
 import { useState, useContext } from "react";
 
 import { Colors } from "../../constants/styles";
-import IconButton from "../ui/IconButton";
 import { UserContext } from "../../store/user-context";
 
 function PlaceItem({ place, onSelect }) {
-  const [like, setLike] = useState(0);
-  const [isCliked, setIsClicked] = useState(false);
-
-  async function likeHandler() {
-    setLike((prevLike) => prevLike + 1);
-    setIsClicked(true);
-  }
-
-  const UserCtx = useContext(UserContext);
-
   return (
     <Pressable
       style={({ pressed }) => [styles.item, pressed && styles.pressed]}
       onPress={onSelect.bind(this, place.id)}
     >
-      <Text>{UserCtx.email}</Text>
+      <Text>{place.user}</Text>
       <Image style={styles.image} source={{ uri: place.imageUriC }} />
-      {/* <Image style={styles.image} source={{ uri: place.imageUriG }} /> */}
 
       <View style={styles.info}>
         <Text style={styles.title}>{place.title}</Text>
         <Text style={styles.address}>{place.address}</Text>
+        <Text style={styles.date}>{place.date}</Text>
         <ScrollView>
           <Text style={styles.description}>"{place.description}"</Text>
         </ScrollView>
-        <View style={styles.position}>
-          <IconButton
-            icon="thumbs-up"
-            color={isCliked ? Colors.primary500 : Colors.primary100}
-            size={36}
-            onPress={likeHandler}
-          />
-          <Text>{like} likes</Text>
-        </View>
+        <View style={styles.position}></View>
       </View>
     </Pressable>
   );
@@ -69,6 +50,8 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 1, height: 1 },
     shadowRadius: 2,
     padding: 5,
+    width: "95%",
+    alignSelf: "center",
   },
   pressed: {
     opacity: 0.9,
@@ -91,6 +74,10 @@ const styles = StyleSheet.create({
   },
   address: {
     fontSize: 12,
+    color: Colors.primary500,
+  },
+  date: {
+    fontSize: 8,
     color: Colors.primary500,
   },
   description: {

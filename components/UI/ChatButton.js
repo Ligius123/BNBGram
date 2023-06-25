@@ -2,7 +2,7 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { Colors } from "../../constants/styles";
 
-function Button({ children, onPress }) {
+function ChatButton({ children, onPress }) {
   return (
     <Pressable
       style={({ pressed }) => [styles.button, pressed && styles.pressed]}
@@ -15,14 +15,14 @@ function Button({ children, onPress }) {
   );
 }
 
-export default Button;
+export default ChatButton;
 
 const styles = StyleSheet.create({
   button: {
     borderRadius: 6,
     paddingVertical: 6,
     paddingHorizontal: 12,
-    backgroundColor: Colors.primary500,
+    color: Colors.primary500,
     elevation: 10,
     shadowColor: Colors.primary500,
     shadowOffset: { width: 1, height: 1 },
@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     opacity: 0.8,
     marginTop: 10,
-    marginBottom: 40,
+    marginBottom: 10,
   },
   pressed: {
     opacity: 0.2,

@@ -29,7 +29,7 @@
     },
     "plugins": [
       [
-        "expo-image-picker",
+        "expo-camera",
         {
           "cameraPermission": "The app needs access to your camera in order to take photos of your favorites places."
         }

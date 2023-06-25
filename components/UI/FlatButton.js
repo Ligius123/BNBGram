@@ -27,6 +27,10 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     textAlign: "center",
+    marginBottom: 4,
     color: Colors.primary900,
+    // backgroundColor: Colors.primary1100,
+    borderRadius: 4,
+    padding: 8,
   },
 });

@@ -1,24 +1,39 @@
-import { View, Text } from "react-native";
-import { useContext, useState, useEffect } from "react";
+import { View, Text, Image } from "react-native";
+import { useState, useEffect } from "react";
 import { StyleSheet } from "react-native";
 
 import BackgroundImage from "../components/ui/BackgroundImage";
-import { PlacesNumberContext } from "../store/numberPlaces-context";
 import { Colors } from "../constants/styles";
-import Button from "../components/ui/Button";
+import OptionsButton from "../components/ui/OptionsButton";
+import { numberOfPlaces } from "../util/http";
+import { useIsFocused } from "@react-navigation/native";
 
-function HowMany({ navigation }) {
-  const numberPlacesCtx = useContext(PlacesNumberContext);
-
+function HowMany({ navigation, route }) {
   const [placesNumber, setPlacesNumber] = useState(0);
 
+  const isFocused = useIsFocused();
+
   useEffect(() => {
-    setPlacesNumber(numberPlacesCtx.numberOfPlaces);
-  }, [numberPlacesCtx.numberOfPlaces]);
+    async function getNumberOfPlaces() {
+      try {
+        const nrPlaces = await numberOfPlaces();
+        setPlacesNumber(nrPlaces);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getNumberOfPlaces();
+  }, [route, isFocused]);
 
   function seePlacesHandler() {
     navigation.navigate("AllPlaces", {
-      numberOfPlaces: placesNumber,
+      numberPlaces: placesNumber,
+    });
+  }
+
+  function seeHowToHandler() {
+    navigation.navigate("HowTo", {
+      numberPlaces: placesNumber,
     });
   }
 
@@ -29,8 +44,18 @@ function HowMany({ navigation }) {
           <Text style={styles.text}>
             You have {placesNumber} places to view !
           </Text>
-
-          <Button onPress={seePlacesHandler}>View Places</Button>
+          <Image
+            style={styles.imageStyles}
+            source={{
+              uri: "https://media2.giphy.com/media/ueVQiEIDXtOV6oQhOW/giphy.gif",
+            }}
+          />
+          <View style={styles.buttons}>
+            <OptionsButton onPress={seePlacesHandler}>
+              View Places
+            </OptionsButton>
+            <OptionsButton onPress={seeHowToHandler}>How To</OptionsButton>
+          </View>
         </View>
       </View>
     </BackgroundImage>
@@ -56,7 +81,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     elevation: 5,
     shadowColor: Colors.primary500,
-    shadowOpacity: 0.15,
+    shadowOpacity: 0.5,
     shadowOffset: { width: 1, height: 1 },
     shadowRadius: 2,
     padding: 24,
@@ -68,5 +93,20 @@ const styles = StyleSheet.create({
     textShadowRadius: 5,
     flex: 2,
     fontSize: 20,
+  },
+  buttons: {
+    flexDirection: "row",
+    marginHorizontal: 8,
+  },
+  imageStyles: {
+    width: "60%",
+    height: "60%",
+    elevation: 5,
+    shadowColor: Colors.primary500,
+    shadowOpacity: 0.5,
+    shadowOffset: { width: 1, height: 1 },
+    shadowRadius: 2,
+    marginBottom: 20
+    ,
   },
 });

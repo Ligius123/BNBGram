@@ -1,20 +1,29 @@
 import { useCallback, useState, useContext } from "react";
-import { ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  Alert,
+} from "react-native";
 
 import { Colors } from "../../constants/styles";
 import Button from "../ui/Button";
-import ImagePicker from "./ImagePicker";
 import Camera from "./Camera";
 import LocationPicker from "./LocationPicker";
 import { Place } from "../../models/place";
-import { FavoritesContext } from "../../store/favorites-context";
+import { UserContext } from "../../store/user-context";
 
 function PlaceForm({ onCreatePlace }) {
   const [enteredTitle, setEnteredTitle] = useState("");
   const [enteredText, setEnteredText] = useState("");
   const [selectedImageC, setSelectedImageC] = useState();
-  const [selectedImageG, setSelectedImageG] = useState();
   const [pickedLocation, setPickedLocation] = useState();
+
+  const userCtx = useContext(UserContext);
+
+  const currentDate = new Date();
 
   function changeTitleHandler(enteredText) {
     setEnteredTitle(enteredText);
@@ -28,50 +37,63 @@ function PlaceForm({ onCreatePlace }) {
     setSelectedImageC(imageUriC);
   }
 
-  function chooseImageHandler(imageUriG) {
-    setSelectedImageG(imageUriG);
-  }
-
   const pickLocationHandler = useCallback((location) => {
     setPickedLocation(location);
   }, []);
 
   function savePlaceHandler() {
-    const placeData = new Place(
-      enteredTitle,
-      enteredText,
-      selectedImageC,
-      selectedImageG,
-      pickedLocation
-    );
-    onCreatePlace(placeData);
+    if (
+      enteredTitle !== "" &&
+      enteredText !== "" &&
+      selectedImageC !== "" &&
+      pickedLocation !== null &&
+      currentDate.toDateString() !== "" &&
+      userCtx.email !== ""
+    ) {
+      onCreatePlace(
+        new Place(
+          enteredTitle,
+          enteredText,
+          selectedImageC,
+          pickedLocation,
+          currentDate.toDateString(),
+          userCtx.email
+        )
+      );
+    } else {
+      Alert.alert(
+        "Not enough parameters!",
+        "You have to fill all fields to post a place."
+      );
+    }
   }
 
   return (
     <ScrollView style={styles.form}>
       <View>
-        <Text style={styles.label}>Title</Text>
-        <TextInput
-          style={[styles.input, enteredTitle.length > 0 && styles.highlight]}
-          onChangeText={changeTitleHandler}
-          value={enteredTitle}
-        />
-        <Text style={styles.label}>Description</Text>
-        <ScrollView>
+        <View>
+          <Text style={styles.label}>Title</Text>
           <TextInput
-            style={[
-              styles.description,
-              enteredText.length > 0 && styles.highlight,
-            ]}
-            onChangeText={changeTextHandler}
-            value={enteredText}
+            style={[styles.input, enteredTitle.length > 0 && styles.highlight]}
+            onChangeText={changeTitleHandler}
+            value={enteredTitle}
           />
-        </ScrollView>
+          <Text style={styles.label}>Description</Text>
+          <ScrollView>
+            <TextInput
+              style={[
+                styles.description,
+                enteredText.length > 0 && styles.highlight,
+              ]}
+              onChangeText={changeTextHandler}
+              value={enteredText}
+            />
+          </ScrollView>
+        </View>
+        <Camera onTakeImage={takeImageHandler} />
+        <LocationPicker onPickLocation={pickLocationHandler} />
+        <Button onPress={savePlaceHandler}>Add Place</Button>
       </View>
-      <Camera onTakeImage={takeImageHandler} />
-      <ImagePicker onChooseImage={chooseImageHandler} />
-      <LocationPicker onPickLocation={pickLocationHandler} />
-      <Button onPress={savePlaceHandler}>Add Place</Button>
     </ScrollView>
   );
 }

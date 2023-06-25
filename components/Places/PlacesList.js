@@ -5,28 +5,32 @@ import {
   View,
   useWindowDimensions,
 } from "react-native";
+import { Button } from "@rneui/themed";
 import { useNavigation } from "@react-navigation/native";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Icon } from "react-native-elements";
+import { LinearGradient } from "expo-linear-gradient";
 
-import { PlacesNumberContext } from "../../store/numberPlaces-context";
 import { Colors } from "../../constants/styles";
 import PlaceItem from "./PlaceItem";
 
 function PlacesList({ places }) {
   const navigation = useNavigation();
-  const numberOfPlacesCtx = useContext(PlacesNumberContext);
+
   const listRef = useRef(null);
+
   const [contentVerticalOffset, setContentVerticalOffset] = useState(0);
 
   const { height } = useWindowDimensions();
 
-  useEffect(() => {
-    numberOfPlacesCtx.getNumberOfPlaces(places.length);
-  }, [places.length]);
-
   function selectPlaceHandler(id) {
     navigation.navigate("PlaceDetails", { placeId: id });
+  }
+
+  function goToForumHandler() {
+    navigation.navigate("Forum", {
+      numberPlaces: places.length,
+    });
   }
 
   if (!places || places.length === 0) {
@@ -41,9 +45,19 @@ function PlacesList({ places }) {
 
   return (
     <View style={styles.alignment}>
-      <Text style={styles.number}>
-        {numberOfPlacesCtx.numberOfPlaces} places to view!
-      </Text>
+      <Button
+        ViewComponent={LinearGradient}
+        linearGradientProps={{
+          colors: [Colors.primary1100, Colors.primary1200],
+          start: { x: 0, y: 0.5 },
+          end: { x: 1, y: 0.5 },
+        }}
+        style={styles.forumButton}
+        onPress={goToForumHandler}
+      >
+        Forum
+      </Button>
+
       <FlatList
         data={places}
         keyExtractor={(item) => item.id}
@@ -59,7 +73,7 @@ function PlacesList({ places }) {
         <Icon
           name="south"
           type="material"
-          color="teal"
+          color={Colors.primary1100}
           raised
           reverse
           containerStyle={styles.scrollTopButton}
@@ -69,18 +83,18 @@ function PlacesList({ places }) {
         />
       )}
       {contentVerticalOffset >= height / 2 && (
-          <Icon
-            name="north"
-            type="material"
-            color="teal"
-            raised
-            reverse
-            containerStyle={styles.scrollTopButton}
-            onPress={() => {
-              listRef.current.scrollToOffset({ offset: 0, animated: true });
-            }}
-          />
-        )}
+        <Icon
+          name="north"
+          type="material"
+          color={Colors.primary1100}
+          raised
+          reverse
+          containerStyle={styles.scrollTopButton}
+          onPress={() => {
+            listRef.current.scrollToOffset({ offset: 0, animated: true });
+          }}
+        />
+      )}
     </View>
   );
 }
@@ -93,32 +107,31 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     width: "90%",
-    // marginLeft: "5%",
-    // marginRight: "5%",
   },
   fallbackText: {
     fontSize: 16,
     color: Colors.primary200,
   },
   alignment: {
-    marginBottom: 45,
-  },
-  number: {
-    marginTop: 4,
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    marginLeft: "25%",
-    padding: 8,
-    borderRadius: 4,
-    backgroundColor: Colors.primary1000,
-    width: "50%",
-    elevation: 10,
-    opacity: 0.5,
+    marginBottom: 138,
   },
   scrollTopButton: {
     position: "absolute",
     bottom: 30,
     right: 0,
+  },
+  forumButton: {
+    borderRadius: 22,
+    overflow: "hidden",
+    marginTop: 4,
+    marginBottom: 4,
+    borderRadius: 8,
+    width: "50%",
+    alignSelf: "center",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    shadowColor: Colors.primary500,
+    elevation: 7,
   },
 });
