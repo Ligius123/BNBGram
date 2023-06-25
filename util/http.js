@@ -14,10 +14,24 @@ export async function storeMessage(message) {
   return id;
 }
 
-export async function storeFavoritePlaceId(placeId) {
-  const response = await axios.post(BACKEND_URL + "/favorite.json", placeId);
-  const id = response.data.name;
-  return id;
+// export async function storeFavoritePlaceId(placeId, selectedPlaceId) {
+//   const response = await axios.post(
+//     BACKEND_URL + `/favorite/${selectedPlaceId}.json`,
+//     placeId
+//   );
+//   const id = selectedPlaceId;
+//   return id;
+// }
+
+export async function storeFavoritePlaceId(placeId, selectedPlaceId) {
+  try {
+    const url = `${BACKEND_URL}/favorite/${selectedPlaceId}.json`;
+    const response = await axios.put(url, placeId);
+    return selectedPlaceId;
+  } catch (error) {
+    console.error("Eroare la stocarea ID-ului preferat:", error);
+    throw error;
+  }
 }
 
 export async function fetchMessage() {
@@ -108,4 +122,25 @@ export function updatePlace(id, place) {
 
 export function deletePlace(id) {
   return axios.delete(BACKEND_URL + `/place/${id}.json`);
+}
+
+export function deleteFavoritePlace(id) {
+  return axios.delete(BACKEND_URL + `/favorite/${id}.json`);
+}
+
+export async function updateDocumentAttribute(
+  collection,
+  documentId,
+  attributeName,
+  attributeValue
+) {
+  try {
+    const url = { BACKEND_URL } + `/${collection}/${documentId}.json`;
+
+    await axios.put(url, { [attributeName]: attributeValue });
+
+    console.log("Atributul a fost actualizat cu succes! ");
+  } catch (error) {
+    console.error("Eroare la actualizarea atributului: ", error);
+  }
 }

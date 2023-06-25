@@ -57,6 +57,7 @@ function PlacesList({ places }) {
       >
         Forum
       </Button>
+
       <FlatList
         data={places}
         keyExtractor={(item) => item.id}
@@ -113,20 +114,6 @@ const styles = StyleSheet.create({
   },
   alignment: {
     marginBottom: 138,
-    // alignItems: "center",
-  },
-  number: {
-    marginTop: 4,
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    marginLeft: "25%",
-    padding: 8,
-    borderRadius: 4,
-    backgroundColor: Colors.primary1000,
-    width: "50%",
-    elevation: 10,
-    opacity: 0.5,
   },
   scrollTopButton: {
     position: "absolute",
@@ -134,10 +121,17 @@ const styles = StyleSheet.create({
     right: 0,
   },
   forumButton: {
+    borderRadius: 22,
+    overflow: "hidden",
+    marginTop: 4,
     marginBottom: 4,
-    borderRadius: 16,
-    padding: 16,
+    borderRadius: 8,
     width: "50%",
     alignSelf: "center",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    shadowColor: Colors.primary500,
+    elevation: 7,
   },
 });

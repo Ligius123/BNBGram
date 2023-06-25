@@ -1,12 +1,24 @@
 import { StyleSheet, View, Text } from "react-native";
 
 import { Colors } from "../../constants/styles";
+import { UserContext } from "../../store/user-context";
+import { useContext } from "react";
 
 function Message({ message }) {
+  const userCtx = useContext(UserContext);
+
   return (
     <View style={styles.wrapper}>
-      <Text style={styles.user}>{message.user}: </Text>
-      <View style={styles.message}>
+      <Text style={styles.user}>
+        {message.user}
+        {userCtx.email === message.user && <Text>(me)</Text>}:{" "}
+      </Text>
+      <View
+        style={[
+          styles.message,
+          userCtx.email === message.user && styles.myMessage,
+        ]}
+      >
         <Text>{message.message}</Text>
         <Text style={styles.date}>{message.date}</Text>
       </View>
@@ -32,6 +44,9 @@ const styles = StyleSheet.create({
     width: "98%",
     justifyContent: "center",
     color: Colors.primary500,
+  },
+  myMessage: {
+    backgroundColor: Colors.primary300,
   },
   user: {
     color: Colors.primary900,

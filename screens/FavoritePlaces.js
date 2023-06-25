@@ -57,17 +57,13 @@ function AllPlaces({ route }) {
         date: response.data[key].date,
         user: response.data[key].user,
       };
-     
+
       if (favPlaceId.includes(placeObj.id)) {
         places.push(placeObj);
       }
     }
     return places;
   }
-
- // if(favPlaceId.placeId === placeObj.id){
-      //   places.push(placeObj);
-      // }
 
   useEffect(() => {
     async function loadAllPlaces() {
@@ -79,6 +75,7 @@ function AllPlaces({ route }) {
         }
         setLoadedPlaces(favoritePlaces);
       } catch (error) {
+        console.log(error);
         setError("Could not fetch id places!");
       }
       setIsFetching(false);
@@ -131,13 +128,12 @@ export default AllPlaces;
 const styles = StyleSheet.create({
   searchBar: {
     marginVertical: 8,
-    paddingHorizontal: 4,
+    paddingHorizontal: 8,
     paddingVertical: 8,
     fontSize: 16,
     borderBottomColor: Colors.primary1100,
-    borderBottomWidth: 2,
     backgroundColor: Colors.primary900,
-    opacity: 0.4,
+    opacity: 0.8,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 6,

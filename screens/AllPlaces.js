@@ -81,13 +81,12 @@ export default AllPlaces;
 const styles = StyleSheet.create({
   searchBar: {
     marginVertical: 8,
-    paddingHorizontal: 4,
+    paddingHorizontal: 8,
     paddingVertical: 8,
     fontSize: 16,
     borderBottomColor: Colors.primary1100,
-    borderBottomWidth: 2,
     backgroundColor: Colors.primary900,
-    opacity: 0.4,
+    opacity: 0.8,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 6,

@@ -1,11 +1,21 @@
 import { useEffect, useState, useLayoutEffect, useContext } from "react";
-import { ScrollView, Image, View, Text, Modal, StyleSheet } from "react-native";
+import {
+  ScrollView,
+  Image,
+  View,
+  Text,
+  Modal,
+  Alert,
+  StyleSheet,
+} from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { UserContext } from "../store/user-context";
 import {
   fetchPlaceDetails,
   deletePlace,
   storeFavoritePlaceId,
+  fetchFavoritePlace,
+  deleteFavoritePlace,
 } from "../util/http";
 
 import OutlinedButton from "../components/ui/OutlinedButton";
@@ -24,6 +34,7 @@ function PlaceDetails({ route, navigation }) {
   const [isDeleting, setIsDeleting] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [placeIsFavorite, setPlaceIsFavorite] = useState(false);
+  const [favId, setFavId] = useState([]);
 
   function showOnMapHandler() {
     navigation.navigate("Map", {
@@ -38,11 +49,20 @@ function PlaceDetails({ route, navigation }) {
   const placeIdCtx = useContext(PlaceIdContext);
 
   async function changeFavoriteStatusHandler(placeId) {
-    try {
-      await storeFavoritePlaceId(placeId);
-      setPlaceIsFavorite(true);
-    } catch (error) {
-      console.log(error);
+    if (placeIsFavorite) {
+      try {
+        await deleteFavoritePlace(selectedPlaceId);
+        setPlaceIsFavorite(false);
+      } catch (error) {
+        setError(error);
+      }
+    } else {
+      try {
+        await storeFavoritePlaceId(placeId, selectedPlaceId);
+        setPlaceIsFavorite(true);
+      } catch (error) {
+        console.log(error);
+      }
     }
   }
 
@@ -61,12 +81,29 @@ function PlaceDetails({ route, navigation }) {
   }, [navigation, changeFavoriteStatusHandler]);
 
   useEffect(() => {
+    async function getFavId() {
+      try {
+        const favorites = await fetchFavoritePlace();
+        setFavId(favorites);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getFavId();
+  }, [selectedPlaceId]);
+
+  useEffect(() => {
     async function loadPlaceData() {
       setIsFetching(true);
       try {
         const place = await fetchPlaceDetails(selectedPlaceId);
         setFetchedPlace(place);
         placeIdCtx.storePlaceId(selectedPlaceId);
+        if (favId.includes(selectedPlaceId)) {
+          setPlaceIsFavorite(true);
+        } else {
+          setPlaceIsFavorite(false);
+        }
         navigation.setOptions({
           title: place.title,
         });
@@ -102,6 +139,15 @@ function PlaceDetails({ route, navigation }) {
       setError("Could not delete place!" + selectedPlaceId.title);
     }
     setIsDeleting(false);
+  }
+
+  function updateHandler() {
+    navigation.navigate("Map", {
+      initialLat: fetchedPlace.location.lat,
+      initialLng: fetchedPlace.location.lng,
+      edit: true,
+      placeId: selectedPlaceId,
+    });
   }
 
   if (error && !isDeleting) {
@@ -177,6 +223,12 @@ function PlaceDetails({ route, navigation }) {
                   color={"black"}
                   size={36}
                   onPress={acceptDeleteHandler}
+                />
+                <IconButton
+                  icon="pencil"
+                  color={"black"}
+                  size={36}
+                  onPress={updateHandler}
                 />
               </View>
             )}

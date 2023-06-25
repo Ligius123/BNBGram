@@ -4,7 +4,7 @@ import { StyleSheet } from "react-native";
 
 import BackgroundImage from "../components/ui/BackgroundImage";
 import { Colors } from "../constants/styles";
-import Button from "../components/ui/Button";
+import OptionsButton from "../components/ui/OptionsButton";
 import { numberOfPlaces } from "../util/http";
 import { useIsFocused } from "@react-navigation/native";
 
@@ -51,10 +51,10 @@ function HowMany({ navigation, route }) {
             }}
           />
           <View style={styles.buttons}>
-            <Button onPress={seePlacesHandler}>
+            <OptionsButton onPress={seePlacesHandler}>
               View Places
-            </Button>
-            <Button onPress={seeHowToHandler}>How To</Button>
+            </OptionsButton>
+            <OptionsButton onPress={seeHowToHandler}>How To</OptionsButton>
           </View>
         </View>
       </View>
@@ -96,8 +96,7 @@ const styles = StyleSheet.create({
   },
   buttons: {
     flexDirection: "row",
-    // justifyContent: "space-between",
-    // alignItems: "center",
+    marginHorizontal: 8,
   },
   imageStyles: {
     width: "60%",
@@ -107,5 +106,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowOffset: { width: 1, height: 1 },
     shadowRadius: 2,
+    marginBottom: 20
+    ,
   },
 });

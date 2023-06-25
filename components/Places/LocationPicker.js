@@ -84,7 +84,9 @@ function LocationPicker({ onPickLocation, editable }) {
   }
 
   function pickOnMapHandler() {
-    navigation.navigate("Map");
+    navigation.navigate("Map", {
+      edit: true,
+    });
   }
 
   let locationPreview = <Text>No location picked yet.</Text>;

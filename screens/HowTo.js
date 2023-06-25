@@ -1,37 +1,20 @@
-// import { Dimensions, Text, View } from 'react-native';
-// import Carousel from 'react-native-reanimated-carousel';
+import { SafeAreaView } from "react-native-safe-area-context";
+import { LinearGradient } from "expo-linear-gradient";
 
-import BackgroundImage from "../components/ui/BackgroundImage";
+import Slider from "../components/ui/Slider";
+import { Colors } from "../constants/styles";
 
 function HowTo() {
-    // const width = Dimensions.get('window').width;
-    // return (
-    //     <BackgroundImage style={{ flex: 1 }}>
-    //         <Carousel
-    //             loop
-    //             width={width}
-    //             height={width / 2}
-    //             autoPlay={true}
-    //             data={[...new Array(6).keys()]}
-    //             scrollAnimationDuration={1000}
-    //             onSnapToItem={(index) => console.log('current index:', index)}
-    //             renderItem={({ index }) => (
-    //                 <View
-    //                     style={{
-    //                         flex: 1,
-    //                         borderWidth: 1,
-    //                         justifyContent: 'center',
-    //                     }}
-    //                 >
-    //                     <Text style={{ textAlign: 'center', fontSize: 30 }}>
-    //                         {index}
-    //                     </Text>
-    //                 </View>
-    //             )}
-    //         />
-    //     </BackgroundImage>
-    // );
-    return <BackgroundImage></BackgroundImage>
+  return (
+    <LinearGradient
+      //   style={styles.wrapper}
+      colors={[Colors.primary1100, Colors.primary1200]}
+    >
+      <SafeAreaView>
+        <Slider />
+      </SafeAreaView>
+    </LinearGradient>
+  );
 }
 
 export default HowTo;
